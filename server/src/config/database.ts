@@ -1,5 +1,5 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { LoggerOptions } from 'typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions.js';
 
 const dbSlowQueryLoggingTimeout = process.env.DB_SLOW_QUERY_LOGGING_TIMEOUT
     ? parseInt(process.env.DB_SLOW_QUERY_LOGGING_TIMEOUT)
@@ -11,7 +11,7 @@ const dbConnectionTimeout = process.env.DB_CONNECTION_TIMEOUT ? parseInt(process
 
 const idleTimeoutMillis = process.env.DB_IDLE_TIMEOUT ? parseInt(process.env.DB_IDLE_TIMEOUT) : 10000;
 
-export const typeOrmConnectionConfig: TypeOrmModuleOptions = {
+export const typeOrmConnectionConfig: PostgresConnectionOptions = {
     type: 'postgres',
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,

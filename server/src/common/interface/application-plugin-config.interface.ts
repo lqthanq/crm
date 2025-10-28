@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export interface ApiServerConfigurationOptions {
+export interface IApiServerConfigurationOptions {
     host?: string;
 
     port?: number | string;
@@ -8,8 +8,8 @@ export interface ApiServerConfigurationOptions {
     baseUrl?: string;
 }
 
-export interface ApplicationPluginConfig {
-    apiConfigOptions: ApiServerConfigurationOptions;
+export interface IApplicationPluginConfig {
+    apiConfigOptions: IApiServerConfigurationOptions;
 
     dbConnectionOptions: TypeOrmModuleOptions;
 }
