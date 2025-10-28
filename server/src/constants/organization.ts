@@ -1,0 +1,1 @@
+export const DEFAULT_STANDARD_WORK_HOURS_PER_DAY = 8;
