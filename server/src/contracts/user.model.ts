@@ -1,4 +1,4 @@
-import { IBasePerTenantEntityModel } from "./base-entity.model";
+import { IBasePerTenantEntityModel } from './base-entity.model';
 
 export interface IUser extends IBasePerTenantEntityModel {
     name?: string;

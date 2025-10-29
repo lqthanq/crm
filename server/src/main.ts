@@ -1,32 +1,32 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { coreEntities } from './lib/core';
-import { createDefaultEmailTemplates } from './lib/email-template/email-template.seed';
+import { loadEnv } from './load-env';
 
-const options: DataSourceOptions = {
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    database: 'crm',
-    username: 'postgres',
-    password: 'Thang@1102',
-    logging: ['query', 'error'],
-    logger: 'advanced-console',
-    synchronize: true,
-    entities: coreEntities,
-};
+console.log('Loading Environment Variables...');
+loadEnv();
+console.log('Environment Variables Loaded');
 
-async function bootstrap() {
-    let dataSource = new DataSource(options);
-    dataSource = await dataSource.initialize();
+console.time('✔ Total API Startup Time');
 
-    console.log('dataSource', dataSource.isInitialized);
+// Import bootstrap
+console.time('✔ Bootstrap Import Time');
+import { bootstrap } from './lib/bootstap';
+console.timeEnd('✔ Bootstrap Import Time');
+console.log('API Core Bootstrap Loaded');
 
-    await createDefaultEmailTemplates(dataSource)
+// Import dev-config
+console.time('✔ Dev Config Import Time');
+import { devConfig } from './dev-config';
+console.timeEnd('✔ Dev Config Import Time');
+console.log('API Core Dev Config Loaded');
 
+(async () => {
+    try {
+        console.log('API Core Starting...');
+        await bootstrap(devConfig);
+        console.log('API Core is running...');
+    } catch (error) {
+        console.error('Error during API Core startup:', error);
+        process.exit(1); // Exit the process with a failure code
+    }
 
-    const app = await NestFactory.create(AppModule);
-    await app.listen(process.env.PORT ?? 3000);
-}
-bootstrap();
+    console.timeEnd('✔ Total API Startup Time');
+})();

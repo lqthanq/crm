@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from 'src/config';
 import { DataSource, DataSourceOptions, EntityMetadata } from 'typeorm';
 import chalk from 'chalk';
+import moment from 'moment';
+import { environment as env } from 'src/config';
+import { createDefaultEmailTemplates } from 'src/lib/email-template/email-template.seed';
 
 type IEntity = Pick<EntityMetadata, 'name' | 'tableName'>;
 
@@ -17,6 +20,28 @@ export class SeedDataService {
         logging: 'all',
         logger: 'file',
     };
+
+    public async runDefaultSeed() {
+        try {
+            await this.createConnection();
+
+            await this.resetDatabase();
+
+            await this.seedBasicDefaultData();
+
+            await this.closeConnection();
+
+            console.log('Database Default Seed Completed');
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    private async seedBasicDefaultData() {
+        this.log(chalk.magenta(`🌱 SEEDING BASIC ${env.production ? 'PRODUCTION' : ''} DATABASE...`));
+
+        await this.tryExecute('Default Email Template', createDefaultEmailTemplates(this.dataSource));
+    }
 
     private async createConnection() {
         if (!this.dataSource) {
@@ -92,6 +117,17 @@ export class SeedDataService {
         } catch (error) {
             this.log('NOTE: DATABASE CONNECTION DOES NOT EXIST YET. CANT CLOSE CONNECTION!');
         }
+    }
+
+    public tryExecute<T>(name: string, p: Promise<T>): Promise<T | void> {
+        this.log(chalk.green(`${moment().format('DD.MM.YYYY HH:mm:ss')} SEEDING ${name}`));
+
+        return (p as any).then(
+            (x: T) => x,
+            (error: Error) => {
+                this.log(chalk.bgRed(`🛑 ERROR: ${error ? error.message : 'unknown'}`));
+            },
+        );
     }
 
     private handleError(error: Error, message?: string): void {

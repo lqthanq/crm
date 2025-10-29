@@ -1,4 +1,4 @@
-import { IBasePerTenantAndOrganizationEntityModel } from "./base-entity.model";
+import { IBasePerTenantAndOrganizationEntityModel } from './base-entity.model';
 
 export interface IEmailTemplate extends IBasePerTenantAndOrganizationEntityModel {
     name: string;

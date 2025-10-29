@@ -1,33 +1,27 @@
-import * as fs from 'fs';
 import * as path from 'path';
-import * as mjml2html from 'mjml';
-import { EmailTemplate } from './email-template.entity';
+import * as fs from 'fs';
+import mjml2html from 'mjml';
 import { DataSource } from 'typeorm';
+import { EmailTemplate } from './email-template.entity';
 
-export const createDefaultEmailTemplates = async (dataSource: DataSource): Promise<any> => {
+export const createDefaultEmailTemplates = async (dataSource: DataSource) => {
     try {
         const templatePath = ['core', 'seeds', 'data', 'default-email-templates'];
 
         const files = [];
 
-        let FOLDER_PATH = path.join(__dirname, '../', ...templatePath);
+        let FOLDER_PATH = path.join(__dirname, '../../', ...templatePath);
 
-        console.log('__dirname', __dirname);
-        console.log('FOLDER_PATH', FOLDER_PATH);
-
-        FOLDER_PATH = fs.existsSync(FOLDER_PATH) ? FOLDER_PATH : path.resolve('.', ...templatePath.slice(2));
+        FOLDER_PATH = fs.existsSync(FOLDER_PATH) ? FOLDER_PATH : path.resolve('.', 'src/lib', ...templatePath);
 
         findInDir(FOLDER_PATH, files);
-
-        console.log(files);
-
         await fileToTemplate(dataSource, files);
     } catch (error) {
         console.error(error);
     }
 };
 
-function findInDir(dir, fileList: string[] = []) {
+function findInDir(dir: string, fileList: string[] = []) {
     const files = fs.readdirSync(dir);
 
     files.forEach((file) => {
@@ -45,46 +39,43 @@ function findInDir(dir, fileList: string[] = []) {
 const fileToTemplate = async (dataSource: DataSource, files: string[]) => {
     for (const file of files) {
         const template = await pathToEmailTemplate(file);
+
         if (template && template.hbs) {
             await insertTemplate(dataSource, template);
         }
     }
 };
 
-const insertTemplate = async (dataSource: DataSource, emailTemplate: EmailTemplate): Promise<void> => {
-    await dataSource.createQueryBuilder().insert().into(EmailTemplate).values(emailTemplate).execute();
-};
-
-const pathToEmailTemplate = async (fullPath: string): Promise<EmailTemplate | void> => {
+const pathToEmailTemplate = async (fullPath: string): Promise<EmailTemplate | undefined> => {
     try {
         const template = new EmailTemplate();
-
         const templatePath = fullPath.replace(/\\/g, '/').split('/');
         const fileName = templatePath[templatePath.length - 1].split('.', 2);
         const fileExtension = fileName[1];
         const fileNameWithoutExtension = fileName[0];
 
-        template.language_code = template[templatePath.length - 2];
+        template.language_code = templatePath[templatePath.length - 2];
+
         template.name = `${templatePath[templatePath.length - 3]}/${fileNameWithoutExtension}`;
 
         const fileContent = fs.readFileSync(fullPath, 'utf8');
-
         switch (fileExtension) {
             case 'mjml':
                 template.mjml = fileContent;
                 template.hbs = mjml2html(fileContent).html;
                 break;
-
             case 'hbs':
                 template.hbs = fileContent;
                 break;
-
             default:
-                console.log(`Warning: ${path} Will be ignored. Only .hbs and .mjml files are supported`);
-                break;
+                console.log(`Warning: "pathToEmailTemplate" Will be ignored. Only .hbs and .mjml files are supported!`);
         }
+        return Promise.resolve(template);
     } catch (error) {
         console.log('Something went wrong', path, error);
-        return;
     }
+};
+
+const insertTemplate = async (dataSource: DataSource, emailTemplate: EmailTemplate) => {
+    await dataSource.createQueryBuilder().insert().into(EmailTemplate).values(emailTemplate).execute();
 };

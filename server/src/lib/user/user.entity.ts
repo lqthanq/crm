@@ -2,9 +2,10 @@ import { IUser } from 'src/contracts';
 import { TenantBaseEntity } from '../core/entities/internal';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { Column, Index } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
+@Entity('users')
 export class User extends TenantBaseEntity implements IUser {
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()

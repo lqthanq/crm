@@ -1,6 +1,6 @@
-import { IOrganization } from "./organization.model";
-import { ITenant } from "./tenant.model";
-import { IUser } from "./user.model";
+import { IOrganization } from './organization.model';
+import { ITenant } from './tenant.model';
+import { IUser } from './user.model';
 
 export type ID = string;
 

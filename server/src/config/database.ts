@@ -34,4 +34,3 @@ export const typeOrmConnectionConfig: PostgresConnectionOptions = {
         idletimeoutMillis: idleTimeoutMillis,
     },
 };
-

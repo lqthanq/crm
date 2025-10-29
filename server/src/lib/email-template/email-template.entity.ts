@@ -1,8 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import type { IEmailTemplate } from 'src/contracts';
-import { Column, Index } from 'typeorm';
-import { TenantOrganizationBaseEntity } from '../core/entities/internal';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { TenantOrganizationBaseEntity } from '../core/entities/tenant-organization-base.entity';
 
+@Entity('email_templates')
 export class EmailTemplate extends TenantOrganizationBaseEntity implements IEmailTemplate {
     @ApiPropertyOptional({ type: () => String })
     @Index()

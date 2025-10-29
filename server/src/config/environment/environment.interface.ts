@@ -1,4 +1,4 @@
-import { ISMTPConfig } from "src/common";
+import { ISMTPConfig } from 'src/common';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -22,9 +22,7 @@ export interface IEnvironment {
     JWT_VERIFICATION_TOKEN_SECRET?: string;
     JWT_VERIFICATION_TOKEN_EXPIRATION_TIME?: number;
 
-
     USER_PASSWORD_BCRYPT_SALT_ROUNDS?: number;
 
     smtpConfig?: ISMTPConfig;
 }
-

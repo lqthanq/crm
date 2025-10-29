@@ -1,10 +1,11 @@
 import { ITenant } from 'src/contracts';
 import { BaseEntity } from '../core/entities/internal';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Index } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { DEFAULT_STANDARD_WORK_HOURS_PER_DAY } from 'src/constants';
 
+@Entity('tenants')
 export class Tenant extends BaseEntity implements ITenant {
     @ApiProperty({ type: () => String })
     @Index()
