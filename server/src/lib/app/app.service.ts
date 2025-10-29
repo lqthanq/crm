@@ -9,7 +9,6 @@ export class AppService {
     ) {}
 
     async seedDBIfEmpty() {
-        console.log('from seed');
         await this.seedDataService.runDefaultSeed();
     }
 }

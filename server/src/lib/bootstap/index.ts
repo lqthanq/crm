@@ -1,16 +1,16 @@
 import { INestApplication, Type } from '@nestjs/common';
-import chalk from 'chalk';
-import { EntitySubscriberInterface } from 'typeorm';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import chalk from 'chalk';
 
 import { IApiServerConfigurationOptions, IApplicationPluginConfig } from 'src/common';
 import { defineConfig, getConfig } from 'src/config';
 
-import { coreEntities } from '../core/entities';
-import { coreSubscribers } from '../core/subscribers';
 import { AppModule } from '../app/app.module';
 import { AppService } from '../app/app.service';
+import { coreEntities } from '../core/entities';
+import { coreSubscribers } from '../core/subscribers';
+import { setupSwagger } from './swagger';
 
 export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>): Promise<INestApplication | void> {
     console.time(chalk.yellow('✅ Total Application Bootstrap Time'));
@@ -42,17 +42,24 @@ export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>
     app.setGlobalPrefix(globalPrefix);
 
     const service = app.select(AppModule).get(AppService);
-
-    console.log('get service');
-    await service.seedDBIfEmpty();
+    // await service.seedDBIfEmpty();
 
     // Start the server
     const { port = 3000, host = '0.0.0.0' } = pluginConfig?.apiConfigOptions as IApiServerConfigurationOptions;
     console.log(chalk.green(`Configured Host: ${host}`));
     console.log(chalk.green(`Configured Port: ${port}`));
 
+    // Configure Swagger for API documentation
+    const swaggerPath = await setupSwagger(app);
+    console.log(chalk.green(`Swagger documentation available at http://${host}:${port}/${swaggerPath}`));
+
     await app.listen(port, host, () => {
         console.log(`Application is running on http://${host}:${port}`);
+
+        const successMessagePrefix = 'Listening at http';
+
+        const message = `${successMessagePrefix}://${host}:${port}/${globalPrefix}`;
+        console.log(chalk.magenta(message));
     });
 
     console.timeEnd(chalk.yellow('✅ Total Application Bootstrap Time'));

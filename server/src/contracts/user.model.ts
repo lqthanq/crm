@@ -13,3 +13,19 @@ export interface IUser extends IBasePerTenantEntityModel {
 
     email_verified_at?: Date;
 }
+
+export interface IUserRegistrationInput {
+    user: IUser;
+    password?: string;
+    confirmPassword?: string;
+}
+
+export interface IUserEmailInput {
+    email: string;
+}
+
+export interface IUserCreateInput {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+}
