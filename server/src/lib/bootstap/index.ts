@@ -42,7 +42,7 @@ export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>
     app.setGlobalPrefix(globalPrefix);
 
     const service = app.select(AppModule).get(AppService);
-    // await service.seedDBIfEmpty();
+    await service.seedDBIfEmpty();
 
     // Start the server
     const { port = 3000, host = '0.0.0.0' } = pluginConfig?.apiConfigOptions as IApiServerConfigurationOptions;

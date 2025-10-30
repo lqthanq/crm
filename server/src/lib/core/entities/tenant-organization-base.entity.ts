@@ -1,6 +1,6 @@
 import type { IBasePerTenantAndOrganizationEntityModel, ID, IOrganization } from 'src/contracts';
 import { Organization, TenantBaseEntity } from './internal';
-import { Column, Index, ManyToOne, RelationId } from 'typeorm';
+import { Column, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
 
@@ -21,5 +21,5 @@ export abstract class TenantOrganizationBaseEntity
     @RelationId((it: TenantOrganizationBaseEntity) => it.organization)
     @Index()
     @Column({ nullable: true })
-    organization_id: ID;
+    organizationId: ID;
 }

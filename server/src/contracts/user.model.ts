@@ -3,28 +3,28 @@ import { ELanguages } from './language.model';
 
 export interface IUser extends IBasePerTenantEntityModel {
     name?: string;
-    first_name?: string;
-    last_name?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
 
     timezone?: string;
 
     hash?: string;
-    preferred_language?: ELanguages;
+    preferredLanguage?: ELanguages;
 
-    email_verified_at?: Date;
+    emailVerifiedAt?: Date;
 
     code?: string;
-    code_expire_at?: Date;
+    codeExpireAt?: Date;
 
-    email_token?: string;
+    emailToken?: string;
 }
 
 export interface IUserRegistrationInput {
     user: IUser;
     password?: string;
-    confirm_password?: string;
-    original_url?: string;
+    confirmPassword?: string;
+    originalUrl?: string;
 }
 
 export interface IUserEmailInput {
@@ -36,7 +36,7 @@ export interface IVerificationTokenPayload extends IUserEmailInput {
 }
 
 export interface IUserCreateInput {
-    first_name?: string;
-    last_name?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
 }

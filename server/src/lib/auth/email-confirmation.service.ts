@@ -39,11 +39,11 @@ export class EmailConfirmationService {
 
             // Update user's email token field and verification code
             await this.userService.update(id!, {
-                email_token: await bcrypt.hash(token, 10),
+                emailToken: await bcrypt.hash(token, 10),
                 code: verificationCode,
                 ...(env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME
                     ? {
-                          code_expire_at: moment(new Date())
+                          codeExpireAt: moment(new Date())
                               .add(env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME, 'seconds')
                               .toDate(),
                       }

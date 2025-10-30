@@ -55,10 +55,10 @@ export class EmailSendService {
 
         const config: Email.EmailConfig<any> = {
             message: {
-                from: smtpConfig.from_address || 'noreply@crm.com',
+                from: smtpConfig.fromAddress || 'noreply@crm.com',
             },
             // if you want to send email in development or test environments, set options.send to true
-            send: true,
+            // send: true,
             transport: transport,
             i18n: {},
             views: {

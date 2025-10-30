@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from 'src/config';
-import { DataSource, DataSourceOptions, EntityMetadata } from 'typeorm';
 import chalk from 'chalk';
 import moment from 'moment';
-import { environment as env } from 'src/config';
+import { DataSource, DataSourceOptions, EntityMetadata } from 'typeorm';
+
+import { ConfigService, environment as env } from 'src/config';
 import { createDefaultEmailTemplates } from 'src/lib/email-template/email-template.seed';
 
 type IEntity = Pick<EntityMetadata, 'name' | 'tableName'>;

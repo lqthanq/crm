@@ -3,7 +3,7 @@ import type { IEmailTemplate } from 'src/contracts';
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { TenantOrganizationBaseEntity } from '../core/entities/tenant-organization-base.entity';
 
-@Entity('email_templates')
+@Entity()
 export class EmailTemplate extends TenantOrganizationBaseEntity implements IEmailTemplate {
     @ApiPropertyOptional({ type: () => String })
     @Index()
@@ -13,7 +13,7 @@ export class EmailTemplate extends TenantOrganizationBaseEntity implements IEmai
     @ApiPropertyOptional({ type: () => String })
     @Index()
     @Column()
-    language_code: string;
+    languageCode: string;
 
     @ApiPropertyOptional({ type: () => String })
     @Column({ type: 'text', nullable: true })

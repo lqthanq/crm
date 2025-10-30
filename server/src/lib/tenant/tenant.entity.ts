@@ -5,7 +5,7 @@ import { Column, Entity, Index } from 'typeorm';
 import { IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { DEFAULT_STANDARD_WORK_HOURS_PER_DAY } from 'src/constants';
 
-@Entity('tenants')
+@Entity()
 export class Tenant extends BaseEntity implements ITenant {
     @ApiProperty({ type: () => String })
     @Index()
@@ -27,5 +27,5 @@ export class Tenant extends BaseEntity implements ITenant {
     @Max(24, { message: 'Standard work hours per day cannot exceed 24 hours' })
     @Min(1, { message: 'Standard work hours per day must be at least 1 hour' })
     @Column({ nullable: true, default: DEFAULT_STANDARD_WORK_HOURS_PER_DAY })
-    standard_work_hours_per_day?: number;
+    standardWorkHoursPerDay?: number;
 }

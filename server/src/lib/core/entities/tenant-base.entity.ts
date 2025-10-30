@@ -1,6 +1,6 @@
 import type { IBasePerTenantEntityModel, ID, ITenant } from 'src/contracts';
 import { BaseEntity, Tenant } from './internal';
-import { Column, Index, ManyToOne, RelationId } from 'typeorm';
+import { Column, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
 
@@ -16,6 +16,6 @@ export abstract class TenantBaseEntity extends BaseEntity implements IBasePerTen
     @IsUUID()
     @RelationId((t: TenantBaseEntity) => t.tenant)
     @Index()
-    @Column({ nullable: true })
-    tenant_id?: ID;
+    @Column({ nullable: true  })
+    tenantId?: ID;
 }

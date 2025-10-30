@@ -9,37 +9,37 @@ export interface IBaseRelationsEntityModel {
 }
 
 export interface IBaseSoftDeleteEntityModel {
-    deleted_at?: Date;
+    deletedAt?: Date;
 }
 
 export interface IBaseEntityActionByUserModel {
-    created_by_user?: IUser;
-    created_by_user_id?: ID;
+    createdByUuser?: IUser;
+    createdByUserId?: ID;
 
-    updated_by_user?: IUser;
-    updated_by_user_id?: ID;
+    updatedByUser?: IUser;
+    updateByUserId?: ID;
 
-    deleted_by_user?: IUser;
-    deleted_by_user_id?: ID;
+    deletedByUser?: IUser;
+    deletedByUserId?: ID;
 }
 
 export interface IBaseEntityModel extends IBaseEntityActionByUserModel, IBaseSoftDeleteEntityModel {
     id?: ID;
 
-    readonly created_at?: Date;
-    readonly updated_at?: Date;
+    readonly createdAt?: Date;
+    readonly updatedAt?: Date;
 
-    is_active?: boolean;
-    is_archived?: boolean;
-    archived_at?: Date;
+    isActive?: boolean;
+    isArchived?: boolean;
+    archivedAt?: Date;
 }
 
 export interface IBasePerTenantEntityModel extends IBaseEntityModel {
-    tenant_id?: ID;
+    tenantId?: ID;
     tenant?: ITenant;
 }
 
 export interface IBasePerTenantAndOrganizationEntityModel extends IBasePerTenantEntityModel {
-    organization_id?: ID;
+    organizationId?: ID;
     organization?: IOrganization;
 }

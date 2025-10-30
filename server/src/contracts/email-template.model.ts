@@ -4,7 +4,7 @@ export interface IEmailTemplate extends IBasePerTenantAndOrganizationEntityModel
     name: string;
     mjml: string;
     hbs: string;
-    language_code: string;
+    languageCode: string;
     title?: string;
 }
 

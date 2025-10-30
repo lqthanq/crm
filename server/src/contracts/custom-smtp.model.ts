@@ -6,10 +6,10 @@ export interface ICustomSmtp extends IBasePerTenantAndOrganizationEntityModel {
     secure: boolean;
     username: string;
     password: string;
-    is_validate?: boolean;
-    from_address?: string;
+    isValidate?: boolean;
+    fromAddress?: string;
 }
 
 export interface ICustomSmtpCreateInput extends ICustomSmtp {}
 
-export interface IVerifySMTPTransport extends Omit<ICustomSmtpCreateInput, 'is_validate'> {}
+export interface IVerifySMTPTransport extends Omit<ICustomSmtpCreateInput, 'isValidate'> {}

@@ -32,7 +32,7 @@ export abstract class SoftDeletableBaseEntity extends Model {
     @IsOptional()
     @IsDateString()
     @DeleteDateColumn()
-    deleted_at?: Date;
+    deletedAt?: Date;
 }
 
 export abstract class AccessTimestamps extends SoftDeletableBaseEntity {
@@ -43,7 +43,7 @@ export abstract class AccessTimestamps extends SoftDeletableBaseEntity {
         description: 'The creation timestamp of the entity.',
     })
     @CreateDateColumn()
-    created_at?: Date;
+    createdAt?: Date;
 
     @ApiPropertyOptional({
         type: 'string',
@@ -52,7 +52,7 @@ export abstract class AccessTimestamps extends SoftDeletableBaseEntity {
         description: 'The last update timestamp of the entity.',
     })
     @UpdateDateColumn()
-    updated_at?: Date;
+    updatedAt?: Date;
 
     static getCurrentDate(): Date {
         return new Date();
@@ -64,34 +64,34 @@ export abstract class BaseEntityActionByUser extends AccessTimestamps {
         nullable: true,
         onDelete: 'CASCADE',
     })
-    created_by_user?: IUser;
+    createdByUser?: IUser;
 
-    @RelationId((it: BaseEntityActionByUser) => it.created_by_user)
+    @RelationId((it: BaseEntityActionByUser) => it.createdByUser)
     @Index()
     @Column({ nullable: true })
-    created_by_user_id?: ID;
+    createdByUserId?: ID;
 
     @ManyToOne(() => User, {
         nullable: true,
         onDelete: 'CASCADE',
     })
-    updated_by_user?: IUser;
+    updatedByUser?: IUser;
 
-    @RelationId((it: BaseEntityActionByUser) => it.updated_by_user)
+    @RelationId((it: BaseEntityActionByUser) => it.updatedByUser)
     @Index()
     @Column({ nullable: true })
-    updated_by_user_id?: ID;
+    updatedByUserId?: ID;
 
     @ManyToOne(() => User, {
         nullable: true,
         onDelete: 'CASCADE',
     })
-    deleted_by_user?: IUser;
+    deletedByUser?: IUser;
 
-    @RelationId((it: BaseEntityActionByUser) => it.deleted_by_user)
+    @RelationId((it: BaseEntityActionByUser) => it.deletedByUser)
     @Index()
     @Column({ nullable: true })
-    deleted_by_user_id?: ID;
+    deletedByUserId?: ID;
 }
 
 export abstract class BaseEntity extends BaseEntityActionByUser implements IBaseEntityModel {
@@ -107,7 +107,7 @@ export abstract class BaseEntity extends BaseEntityActionByUser implements IBase
     @IsBoolean()
     @Index()
     @Column({ nullable: true })
-    is_active?: boolean;
+    isActive?: boolean;
 
     @ApiPropertyOptional({
         type: Boolean,
@@ -117,7 +117,7 @@ export abstract class BaseEntity extends BaseEntityActionByUser implements IBase
     @IsBoolean()
     @Index()
     @Column({ nullable: true })
-    is_archived?: boolean;
+    isArchived?: boolean;
 
     @ApiPropertyOptional({
         type: 'string',
@@ -127,5 +127,5 @@ export abstract class BaseEntity extends BaseEntityActionByUser implements IBase
     @IsOptional()
     @IsDateString()
     @Column({ nullable: true })
-    archived_at?: Date;
+    archivedAt?: Date;
 }

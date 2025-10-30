@@ -5,21 +5,21 @@ import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Column, Entity, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
-@Entity('users')
+@Entity()
 export class User extends TenantBaseEntity implements IUser {
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()
     @IsString()
     @Index()
     @Column({ nullable: true })
-    first_name?: string;
+    firstName?: string;
 
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()
     @IsString()
     @Index()
     @Column({ nullable: true })
-    last_name?: string;
+    lastName?: string;
 
     @ApiPropertyOptional({ type: () => String, minLength: 3, maxLength: 100 })
     @IsOptional()
@@ -45,19 +45,19 @@ export class User extends TenantBaseEntity implements IUser {
     @IsOptional()
     @Exclude({ toPlainOnly: true })
     @Column({ nullable: true, insert: false })
-    email_verified_at?: Date;
+    emailVerifiedAt?: Date;
 
     @ApiPropertyOptional({ type: () => String, enum: ELanguages })
     @IsOptional()
     @IsEnum(ELanguages)
     @Column({ nullable: true, default: ELanguages.ENGLISH })
-    preferred_language?: ELanguages;
+    preferredLanguage?: ELanguages;
 
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()
     @Exclude({ toPlainOnly: true })
     @Column({ insert: false, nullable: true })
-    email_token?: string;
+    emailToken?: string;
 
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()
@@ -70,5 +70,5 @@ export class User extends TenantBaseEntity implements IUser {
     @IsOptional()
     @Exclude({ toPlainOnly: true })
     @Column({ insert: false, nullable: true })
-    code_expire_at?: Date;
+    codeExpireAt?: Date;
 }

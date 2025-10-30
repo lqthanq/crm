@@ -20,8 +20,8 @@ export class EmailService {
         verificationCode: string,
         integration: IAppIntegrationConfig,
     ) {
-        const { email, first_name, last_name, preferred_language } = user;
-        const name = [first_name, last_name].filter(Boolean).join(' ') || email;
+        const { email, firstName, lastName, preferredLanguage } = user;
+        const name = [firstName, lastName].filter(Boolean).join(' ') || email;
 
         const sendOptions = {
             template: EmailTemplateEnum.EMAIL_VERIFICATION,
@@ -34,7 +34,7 @@ export class EmailService {
                 verificationLink,
                 verificationCode,
                 ...integration,
-                locale: preferred_language,
+                locale: preferredLanguage,
                 host: env.clientBaseUrl,
             },
         };
@@ -94,8 +94,8 @@ export class EmailService {
             };
 
             const instance = await this.emailSendService.getEmailInstance({
-                organization_id: organizationId,
-                tenant_id: undefined,
+                organizationId: organizationId,
+                tenantId: undefined,
             });
             const send = await instance.send(sendOptions);
 

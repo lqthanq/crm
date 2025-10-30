@@ -54,7 +54,7 @@ const pathToEmailTemplate = async (fullPath: string): Promise<EmailTemplate | un
         const fileExtension = fileName[1];
         const fileNameWithoutExtension = fileName[0];
 
-        template.language_code = templatePath[templatePath.length - 2];
+        template.languageCode = templatePath[templatePath.length - 2];
 
         template.name = `${templatePath[templatePath.length - 3]}/${fileNameWithoutExtension}`;
 

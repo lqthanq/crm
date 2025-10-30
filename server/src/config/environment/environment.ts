@@ -1,4 +1,3 @@
-import { IAppIntegrationConfig } from 'src/common'
 import { IEnvironment } from './environment.interface';
 
 export const environment: IEnvironment = {
@@ -28,7 +27,7 @@ export const environment: IEnvironment = {
             user: process.env.MAIL_USERNAME!,
             pass: process.env.MAIL_PASSWORD!,
         },
-        from_address: process.env.MAIL_FROM_ADDRESS,
+        fromAddress: process.env.MAIL_FROM_ADDRESS,
     },
 
     appIntegrationConfig: {

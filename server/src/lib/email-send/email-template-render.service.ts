@@ -15,9 +15,9 @@ export class EmailTemplateRenderService {
 
             const query = new Object({
                 name: view,
-                language_code: ELanguages.ENGLISH,
-                organization_id: IsNull(),
-                tenant_id: IsNull(),
+                languageCode: ELanguages.ENGLISH,
+                organizationId: IsNull(),
+                tenantId: IsNull(),
             });
 
             const emailTemplate = await this.emailTemplateRepository.findOneBy(query);

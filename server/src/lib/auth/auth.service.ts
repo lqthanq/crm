@@ -46,7 +46,7 @@ export class AuthService extends SocialAuthService {
         let integration = pick(input, ['appName', 'appEmailConfirmationUrl']);
 
         // 8. If the user's email is not verified, send an email verification
-        if (!user.email_verified_at) {
+        if (!user.emailVerifiedAt) {
             this.emailConfirmationService.sendEmailVerification(user, integration);
         }
 

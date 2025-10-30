@@ -21,7 +21,7 @@ export class SMTPUtils {
         const smtpConfig: ISMTPConfig = environment.smtpConfig!;
 
         const smtp: Partial<ISMTPConfig> = {
-            from_address: smtpConfig.from_address,
+            fromAddress: smtpConfig.fromAddress,
             host: smtpConfig.host,
             port: smtpConfig.port,
             secure: smtpConfig.secure,
@@ -49,7 +49,7 @@ export class SMTPUtils {
             secure: normalizedSecure,
             username: config.auth?.user!,
             password: config.auth?.pass!,
-            from_address: config?.from_address,
+            fromAddress: config?.fromAddress,
         };
 
         return transport;
@@ -64,7 +64,7 @@ export class SMTPUtils {
 
             const secure = SMTPUtils.normalizeSecure(port, config.secure);
             const transporter = nodemailer.createTransport({
-                from: config.from_address,
+                from: config.fromAddress,
                 host: config.host,
                 port,
                 secure,
