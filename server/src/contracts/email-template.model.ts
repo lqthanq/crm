@@ -7,3 +7,8 @@ export interface IEmailTemplate extends IBasePerTenantAndOrganizationEntityModel
     language_code: string;
     title?: string;
 }
+
+export enum EmailTemplateEnum {
+    EMAIL_VERIFICATION = 'email-verification',
+    WELCOME_USER = 'welcome-user',
+}

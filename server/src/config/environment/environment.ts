@@ -1,3 +1,4 @@
+import { IAppIntegrationConfig } from 'src/common'
 import { IEnvironment } from './environment.interface';
 
 export const environment: IEnvironment = {
@@ -27,6 +28,11 @@ export const environment: IEnvironment = {
             user: process.env.MAIL_USERNAME!,
             pass: process.env.MAIL_PASSWORD!,
         },
-        fromAddress: process.env.MAIL_FROM_ADDRESS,
+        from_address: process.env.MAIL_FROM_ADDRESS,
     },
+
+    appIntegrationConfig: {
+        appName: process.env.APP_NAME || 'CRM',
+        appEmailConfirmationUrl: process.env.APP_EMAIL_CONFIRMATION_URL || `${process.env.CLIENT_BASE_URL}/auth/confirm-email`
+    }
 };

@@ -1,0 +1,1 @@
+export const ALPHA_NUMERIC_CODE_LENGTH = 6;

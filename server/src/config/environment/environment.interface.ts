@@ -1,4 +1,4 @@
-import { ISMTPConfig } from 'src/common';
+import { IAppIntegrationConfig, ISMTPConfig } from 'src/common';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -25,4 +25,7 @@ export interface IEnvironment {
     USER_PASSWORD_BCRYPT_SALT_ROUNDS?: number;
 
     smtpConfig?: ISMTPConfig;
+
+    /** Email Template Config */
+    appIntegrationConfig?: IAppIntegrationConfig
 }

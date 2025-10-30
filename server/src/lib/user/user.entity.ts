@@ -1,7 +1,7 @@
-import { IUser } from 'src/contracts';
+import { IUser, ELanguages } from 'src/contracts';
 import { TenantBaseEntity } from '../core/entities/internal';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Column, Entity, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
@@ -46,4 +46,29 @@ export class User extends TenantBaseEntity implements IUser {
     @Exclude({ toPlainOnly: true })
     @Column({ nullable: true, insert: false })
     email_verified_at?: Date;
+
+    @ApiPropertyOptional({ type: () => String, enum: ELanguages })
+    @IsOptional()
+    @IsEnum(ELanguages)
+    @Column({ nullable: true, default: ELanguages.ENGLISH })
+    preferred_language?: ELanguages;
+
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    @Exclude({ toPlainOnly: true })
+    @Column({ insert: false, nullable: true })
+    email_token?: string;
+
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    @IsString()
+    @Exclude({ toPlainOnly: true })
+    @Column({ insert: false, nullable: true })
+    code?: string;
+
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    @Exclude({ toPlainOnly: true })
+    @Column({ insert: false, nullable: true })
+    code_expire_at?: Date;
 }
