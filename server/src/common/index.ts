@@ -1,2 +1,3 @@
 export * from './decorators';
 export * from './interface';
+export * from './shared-types';
