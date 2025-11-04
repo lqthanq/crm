@@ -71,4 +71,8 @@ export class User extends TenantBaseEntity implements IUser {
     @Exclude({ toPlainOnly: true })
     @Column({ insert: false, nullable: true })
     codeExpireAt?: Date;
+
+    name?: string;
+
+    isEmailVerified?: boolean;
 }
