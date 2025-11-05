@@ -8,6 +8,9 @@ import { IAppIntegrationConfig } from 'src/common';
 import { User } from '../user/user.entity';
 import { EmailConfirmationService } from './email-confirmation.service';
 import { EmailService } from '../email-send/email.service';
+import { RequestContext } from '../core/context';
+import { AccountRegistrationEvent } from '../event-bus/events';
+import { EventBus } from '../event-bus/event-bus';
 
 @Injectable()
 export class AuthService extends SocialAuthService {
@@ -15,6 +18,7 @@ export class AuthService extends SocialAuthService {
         private readonly userRepository: UserRepository,
         private readonly emailConfirmationService: EmailConfirmationService,
         private readonly emailService: EmailService,
+        private readonly eventBus: EventBus,
     ) {
         super();
     }
@@ -51,6 +55,9 @@ export class AuthService extends SocialAuthService {
         }
 
         // Publish the account registration event
+        const ctx = RequestContext.currentRequestContext();
+        const event = new AccountRegistrationEvent(ctx, user);
+        this.eventBus.publish(event);
 
         // 9. Send a welcome email to the user
         this.emailService.welcomeUser(input.user, languageCode, undefined, undefined, integration);

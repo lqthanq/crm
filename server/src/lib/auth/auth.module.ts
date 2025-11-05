@@ -7,12 +7,13 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { EmailConfirmationService } from './email-confirmation.service';
 import { EmailSendModule } from '../email-send/email-send.module';
+import { EventBusModule } from '../event-bus/event-bus.module';
 
 // Core service providers for handling authentication and related functionalities
 const providers = [AuthService, EmailConfirmationService];
 
 @Module({
-    imports: [UserModule, EmailSendModule, CqrsModule],
+    imports: [UserModule, EmailSendModule, CqrsModule, EventBusModule],
     controllers: [AuthController],
     providers: [...providers, ...CommandHandlers],
 })
