@@ -5,3 +5,9 @@ export interface ITenant extends IBaseEntityModel {
     logo?: string;
     standardWorkHoursPerDay?: number;
 }
+
+export interface ITenantUpdateInput {
+    name: string;
+}
+
+export interface ITenantCreateInput extends ITenantUpdateInput {}

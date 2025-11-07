@@ -1,0 +1,26 @@
+import { IBasePerTenantEntityModel, ID } from './base-entity.model';
+import { IRole } from './role.model';
+
+export interface IRolePermission extends IBasePerTenantEntityModel {
+    role: IRole;
+    roleId: ID;
+    permission: string;
+    enabled: boolean;
+    description: string;
+}
+
+export enum EPermissions {
+    ADMIN_DASHBOARD_VIEW = 'ADMIN_DASHBOARD_VIEW',
+    TEAM_DASHBOARD = 'TEAM_DASHBOARD',
+
+    ORG_PAYMENT_VIEW = 'ORG_PAYMENT_VIEW',
+	ORG_PAYMENT_ADD_EDIT = 'ORG_PAYMENT_ADD_EDIT',
+
+    // Member View Permissions
+    ORG_CANDIDATES_INTERVIEW_EDIT = 'ORG_CANDIDATES_INTERVIEW_EDIT',
+    ORG_CANDIDATES_INTERVIEW_VIEW = 'ORG_CANDIDATES_INTERVIEW_VIEW',
+    ORG_CANDIDATES_DOCUMENTS_VIEW = 'ORG_CANDIDATES_DOCUMENTS_VIEW',
+
+    // Viewing & Discovery
+    PLUGIN_VIEW = 'PLUGIN_VIEW',
+}

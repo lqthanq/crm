@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { CLS_ID, ClsService } from 'nestjs-cls';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ELanguages, ID } from 'src/contracts';
+import { ELanguages, ID, IUser } from 'src/contracts';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class RequestContext {
     protected static clsService: ClsService;
@@ -81,5 +82,36 @@ export class RequestContext {
         }
 
         return context;
+    }
+    
+    /**
+     * Retrieves the current user from the request context
+     */
+    static currentUser(throwError?: boolean): IUser | null {
+        const requestContext = RequestContext.currentRequestContext();
+
+        // Check if request context exists
+        if (requestContext) {
+
+            const user: IUser = requestContext._req['user'];
+
+            if (user) {
+                return user;
+            }
+        }
+
+        if (throwError) {
+            throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED)
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieves the current tenant ID associated with the user in the RequestContext.
+     */
+    static currentTenantId(): ID | null {
+        const user: IUser | null = RequestContext.currentUser();
+        return user?.tenantId || null;
     }
 }

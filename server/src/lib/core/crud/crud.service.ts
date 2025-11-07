@@ -1,8 +1,8 @@
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { BaseEntity } from '../entities/internal';
 import { ICrudService } from './icrud.service';
 import { parseFindCountOptions } from './utils';
-import { ID } from 'src/contracts';
+import { ID, IPagination } from 'src/contracts';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
@@ -56,5 +56,46 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         }
 
         return record;
+    }
+
+    /**
+     * Finds entities that match given find options.
+     */
+    public async find(options?: FindManyOptions<T>): Promise<T[]> {
+        return await this.repository.find(options);
+    }
+
+    /**
+     * Creates a new entity or update an existing one based on the provided entity data.
+     */
+    public async create(partialEntity: DeepPartial<T>): Promise<T> {
+        try {
+            const newEntity = this.repository.create(partialEntity);
+            return await this.repository.save(newEntity);
+        } catch (error) {
+            console.error('Error in crud service create method:', error);
+            throw new BadRequestException(error);
+        }
+    }
+
+    /**
+     * Saves a given entity in the database
+     */
+    public async save(entity: DeepPartial<T>): Promise<T> {
+        try {
+            return await this.repository.save(entity);
+        } catch (error) {
+            console.error('Error in crud service save method;', error);
+            throw new BadRequestException(error);
+        }
+    }
+
+    /**
+     * Finds entities that match given find options.
+     */
+    public async findAll(options: FindManyOptions<T>): Promise<IPagination<T>> {
+        const [items, total] = await this.repository.findAndCount(options);
+
+        return { items, total };
     }
 }

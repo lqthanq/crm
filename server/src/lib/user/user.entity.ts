@@ -1,8 +1,8 @@
-import { IUser, ELanguages } from 'src/contracts';
-import { TenantBaseEntity } from '../core/entities/internal';
+import { IUser, ELanguages, IRole } from 'src/contracts';
+import { Role, TenantBaseEntity } from '../core/entities/internal';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { Column, Entity, Index } from 'typeorm';
+import { IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -41,11 +41,12 @@ export class User extends TenantBaseEntity implements IUser {
     @Column({ nullable: true })
     hash?: string;
 
-    @ApiPropertyOptional({ type: () => Date })
+    @ApiPropertyOptional({ type: () => String })
     @IsOptional()
+    @IsString()
     @Exclude({ toPlainOnly: true })
-    @Column({ nullable: true, insert: false })
-    emailVerifiedAt?: Date;
+    @Column({ insert: false, nullable: true })
+    refreshToken?: string;
 
     @ApiPropertyOptional({ type: () => String, enum: ELanguages })
     @IsOptional()
@@ -72,7 +73,34 @@ export class User extends TenantBaseEntity implements IUser {
     @Column({ insert: false, nullable: true })
     codeExpireAt?: Date;
 
+    @ApiPropertyOptional({ type: () => Date })
+    @IsOptional()
+    @Exclude({ toPlainOnly: true })
+    @Column({ nullable: true, insert: false })
+    emailVerifiedAt?: Date;
+
+    @ApiPropertyOptional({ type: () => Date })
+    @IsOptional()
+    @Column({ insert: false, nullable: true })
+    lastLoginAt?: Date;
+
     name?: string;
 
     isEmailVerified?: boolean;
+
+    @ManyToOne(() => Role, {
+        nullable: true,
+
+        onDelete: 'SET NULL',
+    })
+    @JoinColumn()
+    role?: IRole;
+
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    @IsUUID()
+    @RelationId((it: User) => it.role)
+    @Index()
+    @Column({ nullable: true })
+    roleId?: string;
 }

@@ -28,8 +28,8 @@ export class EmailConfirmationService {
             const { id, email } = user;
             const payload: IVerificationTokenPayload = { id: id!, email: email! };
 
-            const token = sign(payload, env.JWT_VERIFICATION_TOKEN_SECRET, {
-                expiresIn: `${env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME}s`,
+            const token = sign(payload, env.JWT_VERIFICATION_TOKEN_SECRET!, {
+                expiresIn: `${env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME!}s`,
             });
 
             const appIntegration = deepMerge(env.appIntegrationConfig, integration);
