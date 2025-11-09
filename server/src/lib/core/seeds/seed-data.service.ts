@@ -5,6 +5,10 @@ import { DataSource, DataSourceOptions, EntityMetadata } from 'typeorm';
 
 import { ConfigService, environment as env } from 'src/config';
 import { createDefaultEmailTemplates } from 'src/lib/email-template/email-template.seed';
+import { createDefaultFeatureToggle } from 'src/lib/feature/feature.seed';
+import { ITenant } from 'src/contracts';
+import { DEFAULT_TENANT } from 'src/lib/tenant/default-tenants';
+import { createDefaultTenant } from 'src/lib/tenant/tenant.seed';
 
 type IEntity = Pick<EntityMetadata, 'name' | 'tableName'>;
 
@@ -13,6 +17,7 @@ export class SeedDataService {
     dataSource: DataSource;
 
     log = console.log;
+    tenant: ITenant;
 
     constructor(private readonly configService: ConfigService) {}
 
@@ -41,6 +46,14 @@ export class SeedDataService {
         this.log(chalk.magenta(`🌱 SEEDING BASIC ${env.production ? 'PRODUCTION' : ''} DATABASE...`));
 
         await this.tryExecute('Default Email Template', createDefaultEmailTemplates(this.dataSource));
+
+        // Default and internal tenant
+        const tenantName = DEFAULT_TENANT;
+        this.tenant = (await this.tryExecute('Tenant', createDefaultTenant(this.dataSource, tenantName))) as ITenant;
+
+        await this.tryExecute('Default Feature Toggle', createDefaultFeatureToggle(this.dataSource, this.tenant));
+
+        this.log(chalk.magenta(`✅ SEEDED BASIC ${env.production ? 'PRODUCTION' : ''} DATABASE...`));
     }
 
     private async createConnection() {

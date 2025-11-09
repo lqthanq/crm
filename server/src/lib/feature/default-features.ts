@@ -1,0 +1,62 @@
+import { EFeatures, IFeatureCreateInput } from 'src/contracts';
+
+export const DEFAULT_FEATURES: IFeatureCreateInput[] = [
+    {
+        name: 'Dashboard',
+        code: EFeatures.FEATURE_DASHBOARD,
+        description: 'Go to dashboard, Manage Employee Statistics, Time Tracking Dashboard',
+        link: 'dashboard/accounting',
+        isEnabled: true,
+        status: 'info',
+    },
+    {
+        name: 'Payment',
+        code: EFeatures.FEATURE_PAYMENT,
+        description: 'Manage Payment, Create First Payment',
+        link: 'accounting/payments',
+        isEnabled: true,
+        status: 'success',
+    },
+    {
+        name: 'Employees',
+        code: EFeatures.FEATURE_EMPLOYEES,
+        description: 'Manage Employees, And or Invite Employees',
+        link: 'employees',
+        isEnabled: true,
+        status: 'sucess',
+        children: [
+            {
+                name: 'Employee Level',
+                code: EFeatures.FEATURE_EMPLOYEE_LEVEL,
+                description: 'Manage Employee Level',
+                link: 'employees/employee-level',
+                isEnabled: true,
+                status: 'warning',
+            },
+            {
+                name: 'Employee Position',
+                code: EFeatures.FEATURE_EMPLOYEE_POSITION,
+                description: 'Manage Employee Position',
+                link: 'employees/positions',
+                isEnabled: true,
+                status: 'success',
+            },
+            {
+                name: 'Employee Time Off',
+                code: EFeatures.FEATURE_EMPLOYEE_TIMEOFF,
+                description: 'Manage Employee Time off',
+                link: 'employees/time-off',
+                isEnabled: true,
+                status: 'info',
+            },
+        ],
+    },
+    {
+        name: 'Users',
+        code: EFeatures.FEATURE_USER,
+        description: 'Manage Tenant Users',
+        link: 'users',
+        isEnabled: true,
+        status: 'primary',
+    },
+];

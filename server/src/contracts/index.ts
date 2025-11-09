@@ -2,6 +2,7 @@ export * from './base-entity.model';
 export * from './core.model';
 export * from './custom-smtp.model';
 export * from './email-template.model';
+export * from './feature.model';
 export * from './language.model';
 export * from './organization.model';
 export * from './role-permission.model';

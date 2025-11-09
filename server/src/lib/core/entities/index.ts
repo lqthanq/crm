@@ -1,3 +1,21 @@
-import { EmailTemplate, Organization, Role, RolePermission, Tenant, User } from './internal';
+import {
+    EmailTemplate,
+    Feature,
+    FeatureOrganization,
+    Organization,
+    Role,
+    RolePermission,
+    Tenant,
+    User,
+} from './internal';
 
-export const coreEntities = [EmailTemplate, Organization, Role, RolePermission, Tenant, User];
+export const coreEntities = [
+    EmailTemplate,
+    Feature,
+    FeatureOrganization,
+    Organization,
+    Role,
+    RolePermission,
+    Tenant,
+    User,
+];

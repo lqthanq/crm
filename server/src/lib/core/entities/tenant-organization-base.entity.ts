@@ -1,8 +1,8 @@
-import type { IBasePerTenantAndOrganizationEntityModel, ID, IOrganization } from 'src/contracts';
-import { Organization, TenantBaseEntity } from './internal';
-import { Column, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
+import type { IBasePerTenantAndOrganizationEntityModel, ID, IOrganization } from 'src/contracts';
+import { Column, Index, ManyToOne, RelationId } from 'typeorm';
+import { Organization, TenantBaseEntity } from './internal';
 
 export abstract class TenantOrganizationBaseEntity
     extends TenantBaseEntity
