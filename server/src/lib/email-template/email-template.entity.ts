@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import type { IEmailTemplate } from 'src/contracts';
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { TenantOrganizationBaseEntity } from '../core/entities/tenant-organization-base.entity';
 
 @Entity()

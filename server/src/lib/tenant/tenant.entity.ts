@@ -14,7 +14,7 @@ export class Tenant extends BaseEntity implements ITenant {
     name?: string;
 
     @ApiPropertyOptional({ type: () => String })
-    @Column()
+    @Column({ nullable: true })
     logo?: string;
 
     @ApiPropertyOptional({
