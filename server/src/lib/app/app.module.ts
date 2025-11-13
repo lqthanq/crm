@@ -9,6 +9,9 @@ import { ClsModule, ClsService } from 'nestjs-cls';
 import moment from 'moment';
 import { ELanguages } from 'src/contracts';
 import { RequestContext } from '../core';
+import { TenantModule } from '../tenant/tenant.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformInterceptor } from '../core/interceptors/transform.interceptor';
 
 @Module({
     imports: [
@@ -20,9 +23,16 @@ import { RequestContext } from '../core';
         CoreModule,
         UserModule,
         SeederModule,
+        TenantModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: TransformInterceptor,
+        },
+    ],
 })
 export class AppModule implements OnModuleInit {
     constructor(private readonly clsService: ClsService) {

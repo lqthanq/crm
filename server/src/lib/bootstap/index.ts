@@ -6,9 +6,9 @@ import chalk from 'chalk';
 import { IApiServerConfigurationOptions, IApplicationPluginConfig } from 'src/common';
 import { defineConfig, getConfig } from 'src/config';
 
+import { coreEntities } from '../core/entities';
 import { AppModule } from '../app/app.module';
 import { AppService } from '../app/app.service';
-import { coreEntities } from '../core/entities';
 import { coreSubscribers } from '../core/entities/subscribers';
 import { setupSwagger } from './swagger';
 

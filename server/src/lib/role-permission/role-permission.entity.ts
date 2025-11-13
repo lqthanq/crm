@@ -1,12 +1,12 @@
-import { Column, Entity, Index, ManyToOne, RelationId } from "typeorm";
-import { TenantBaseEntity } from "../core/entities/tenant-base.entity";
-import { EPermissions, IRolePermission } from "src/contracts";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Role } from "../core/entities/internal";;
+import { Column, Entity, Index, ManyToOne, RelationId } from 'typeorm';
+import { TenantBaseEntity } from '../core/entities/tenant-base.entity';
+import { EPermissions, IRolePermission } from 'src/contracts';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Role } from '../core/entities/internal';
 
 @Entity()
 export class RolePermission extends TenantBaseEntity implements IRolePermission {
-    @ApiProperty({ type: () => String, enum: EPermissions})
+    @ApiProperty({ type: () => String, enum: EPermissions })
     @Index()
     @Column()
     permission: string;
@@ -15,7 +15,7 @@ export class RolePermission extends TenantBaseEntity implements IRolePermission 
     @Column({ nullable: true, default: false })
     enabled: boolean;
 
-    @ApiPropertyOptional({ type: () => String})
+    @ApiPropertyOptional({ type: () => String })
     @Column({ nullable: true })
     description: string;
 
@@ -27,4 +27,12 @@ export class RolePermission extends TenantBaseEntity implements IRolePermission 
     @Index()
     @Column({})
     roleId: string;
+
+    constructor(input?: any) {
+        super();
+
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }

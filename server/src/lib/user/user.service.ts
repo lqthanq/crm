@@ -14,6 +14,13 @@ export class UserService extends TenantAwareCrudService<User> {
     }
 
     /**
+     * Counts the total number of records in the current repository/table.
+     */
+    public async countFast(): Promise<number> {
+        return await super.count();
+    }
+
+    /**
      * Sets the current refresh token for the user
      */
     async setCurrentRefreshToken(refreshToken: string, userId: ID): Promise<UpdateResult | void> {
@@ -32,12 +39,12 @@ export class UserService extends TenantAwareCrudService<User> {
     /**
      * Update the last login time after user logged in
      */
-    async setUserLastLoginTimestamp(userId: ID): Promise<UpdateResult|void> {
+    async setUserLastLoginTimestamp(userId: ID): Promise<UpdateResult | void> {
         try {
             const lastLoginAt = new Date();
             const id = userId;
 
-            return await this.repository.update(id, { lastLoginAt })
+            return await this.repository.update(id, { lastLoginAt });
         } catch (error) {
             console.log('Error while updating last login time', error);
         }

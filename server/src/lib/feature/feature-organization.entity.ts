@@ -24,4 +24,12 @@ export class FeatureOrganization extends TenantOrganizationBaseEntity implements
     @Index()
     @Column()
     featureId: IFeature['id'];
+
+    constructor(input?: any) {
+        super();
+
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }

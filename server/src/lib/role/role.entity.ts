@@ -2,8 +2,7 @@ import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-
-import { TenantBaseEntity, RolePermission  } from '../core/entities/internal';
+import { TenantBaseEntity, RolePermission } from '../core/entities/internal';
 import { ERoles, IRole, IRolePermission } from 'src/contracts';
 
 @Entity()
@@ -22,4 +21,12 @@ export class Role extends TenantBaseEntity implements IRole {
 
     @OneToMany(() => RolePermission, (it) => it.role, { cascade: true })
     rolePermissions?: IRolePermission[];
+
+    constructor(input?: any) {
+        super();
+
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }

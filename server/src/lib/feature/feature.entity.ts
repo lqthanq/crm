@@ -57,4 +57,12 @@ export class Feature extends BaseEntity implements IFeature {
     })
     @JoinColumn({ name: 'parentId' })
     children: IFeature[];
+
+    constructor(input?: any) {
+        super();
+
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }

@@ -16,4 +16,12 @@ export class Organization extends TenantBaseEntity implements IOrganization {
     @Index()
     @Column('boolean', { default: false })
     isDefault: boolean;
+
+    constructor(input?: any) {
+        super();
+
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }
