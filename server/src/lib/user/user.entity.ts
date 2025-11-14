@@ -1,9 +1,10 @@
-import { IUser, ELanguages, IRole } from 'src/contracts';
+import { IUser, ELanguages, IRole, IUserOrganization } from 'src/contracts';
 import { Role, TenantBaseEntity } from '../core/entities/internal';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
-import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { UserOrganization } from '../user-organization/user-organization.entity';
 
 @Entity()
 export class User extends TenantBaseEntity implements IUser {
@@ -103,4 +104,10 @@ export class User extends TenantBaseEntity implements IUser {
     @Index()
     @Column({ nullable: true })
     roleId?: string;
+
+    @OneToMany(() => UserOrganization, (it) => it.user, {
+        cascade: true,
+    })
+    @JoinColumn()
+    organizations?: IUserOrganization[];
 }

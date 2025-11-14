@@ -1,6 +1,7 @@
 import { IBasePerTenantEntityModel } from './base-entity.model';
 import { ELanguages } from './language.model';
 import { IRole } from './role.model';
+import { IUserOrganization } from './user-organization.model';
 
 export interface IUser extends IBasePerTenantEntityModel {
     name?: string;
@@ -14,6 +15,8 @@ export interface IUser extends IBasePerTenantEntityModel {
 
     hash?: string;
     preferredLanguage?: ELanguages;
+
+    organizations?: IUserOrganization[];
 
     code?: string;
     codeExpireAt?: Date;

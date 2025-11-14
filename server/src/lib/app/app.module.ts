@@ -12,6 +12,7 @@ import { RequestContext } from '../core';
 import { TenantModule } from '../tenant/tenant.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from '../core/interceptors/transform.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { TransformInterceptor } from '../core/interceptors/transform.interceptor
             global: true,
             middleware: { mount: false },
         }),
+        CacheModule.register({ isGlobal: true }),
         AuthModule,
         CoreModule,
         UserModule,

@@ -54,4 +54,36 @@ export class RolePermissionService extends TenantAwareCrudService<RolePermission
         await this.repository.save(rolesPermissions);
         return rolesPermissions;
     }
+
+    /**
+     * Checks if the given role permissions are valid for the current tenant
+     */
+    public async checkRolePermission(
+        tenantId: string,
+        roleId: string,
+        permissions: string[],
+        includeRole: boolean = false,
+    ): Promise<boolean> {
+        // Create a query builder for the 'role_permission' entity
+        const query = this.repository.createQueryBuilder('rp');
+
+        // Add the condition for the current tenant Id
+        query.where('rp.tenantId = :tenantId', { tenantId });
+
+        // If includeRole is true, add the condition for the current role ID
+        if (includeRole) {
+            query.andWhere('rp.roleId = :roleId', { roleId });
+        }
+
+        // Add conditions for permissions, enabled, isActive, and isArchived
+        query.andWhere('rp.permission IN(:...permissions)', { permissions });
+        query.andWhere('rp.enabled = :enabled', { enabled: true });
+        query.andWhere('rp.isActive = :isActive', { isActive: true });
+        query.andWhere('rp.isArchived = :isArchived', { isArchived: false });
+
+        // Execute the query and get the count
+        const count = await query.getCount();
+
+        return count > 0;
+    }
 }

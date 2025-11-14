@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { CLS_ID, ClsService } from 'nestjs-cls';
 import { v4 as uuidv4 } from 'uuid';
-
-import { ELanguages, ID, IUser } from 'src/contracts';
+import { verify } from 'jsonwebtoken';
+import { ExtractJwt } from 'passport-jwt';
 import { HttpException, HttpStatus } from '@nestjs/common';
+
+import { ELanguages, EPermissions, ID, IUser } from 'src/contracts';
+import { environment as env } from 'src/config';
 
 export class RequestContext {
     protected static clsService: ClsService;
@@ -83,7 +86,7 @@ export class RequestContext {
 
         return context;
     }
-    
+
     /**
      * Retrieves the current user from the request context
      */
@@ -92,8 +95,7 @@ export class RequestContext {
 
         // Check if request context exists
         if (requestContext) {
-
-            const user: IUser = requestContext._req['user'];
+            const user: IUser | undefined = requestContext._req['user'];
 
             if (user) {
                 return user;
@@ -101,10 +103,19 @@ export class RequestContext {
         }
 
         if (throwError) {
-            throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED)
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
         }
 
         return null;
+    }
+
+    /**
+     * Retrieves the current user ID associated with the user in the RequestContext.
+     * Returns the user ID if available, otherwise returns null.
+     */
+    static currentUserId(): ID | null {
+        const user: IUser | null = RequestContext.currentUser();
+        return user?.id || null;
     }
 
     /**
@@ -113,5 +124,65 @@ export class RequestContext {
     static currentTenantId(): ID | null {
         const user: IUser | null = RequestContext.currentUser();
         return user?.tenantId || null;
+    }
+
+    static currentRoleId(): ID | null {
+        const user: IUser | null = RequestContext.currentUser();
+        return user?.roleId || null;
+    }
+
+    /**
+     * Extracts the current JWT token from the request context.
+     */
+    static currentToken(throwError?: boolean): any {
+        const requestContext = RequestContext.currentRequestContext();
+
+        if (requestContext) {
+            try {
+                return ExtractJwt.fromAuthHeaderAsBearerToken()(requestContext._req);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (throwError) {
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if the current request context has the specified permissions
+     */
+    static hasPermissions(permissions: EPermissions[], throwError?: boolean): boolean {
+        const requestContext = RequestContext.currentRequestContext();
+
+        if (requestContext) {
+            try {
+                const token = this.currentToken();
+
+                if (token) {
+                    const jwtPayload = verify(token, env.JWT_SECRET!) as { id: string; permissions: EPermissions[] };
+
+                    return permissions.every((permission) => (jwtPayload.permissions ?? []).includes(permission));
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (throwError) {
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the current user has a specific permission.
+     */
+    static hasPermission(permission: EPermissions, throwError?: boolean): boolean {
+        return this.hasPermissions([permission], throwError);
     }
 }

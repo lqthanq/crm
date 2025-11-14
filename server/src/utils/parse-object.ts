@@ -1,0 +1,22 @@
+import { isClassInstance } from './is-class-instance';
+import { isObject } from './is-object';
+
+export function parseObject<T extends object>(source: T, callback: (value: any) => any): T {
+    if (!isObject(source)) {
+        return source;
+    }
+
+    for (const key of Object.keys(source)) {
+        const value = source[key];
+
+        if (isObject(value)) {
+            if (!isClassInstance(value)) {
+                source[key] = parseObject(value, callback);
+            }
+        } else {
+            source[key] = callback(value);
+        }
+    }
+
+    return source;
+}

@@ -7,6 +7,7 @@ import {
     RolePermission,
     Tenant,
     User,
+    UserOrganization,
 } from './internal';
 
 export const coreEntities = [
@@ -18,4 +19,5 @@ export const coreEntities = [
     RolePermission,
     Tenant,
     User,
+    UserOrganization,
 ];
