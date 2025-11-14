@@ -2,6 +2,7 @@ export * from './base.entity';
 export * from './tenant-base.entity';
 export * from './tenant-organization-base.entity';
 
+export * from '../../currency/currency.entity';
 export * from '../../email-template/email-template.entity';
 export * from '../../feature/feature.entity';
 export * from '../../feature/feature-organization.entity';

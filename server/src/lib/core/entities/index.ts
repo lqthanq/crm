@@ -1,4 +1,5 @@
 import {
+    Currency,
     EmailTemplate,
     Feature,
     FeatureOrganization,
@@ -11,6 +12,7 @@ import {
 } from './internal';
 
 export const coreEntities = [
+    Currency,
     EmailTemplate,
     Feature,
     FeatureOrganization,

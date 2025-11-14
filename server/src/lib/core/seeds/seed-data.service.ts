@@ -13,6 +13,7 @@ import { createRoles } from 'src/lib/role/role.seed';
 import { createRolePermissions } from 'src/lib/role-permission/role-permission.seed';
 import { DEFAULT_ORGANIZATIONS } from 'src/lib/organization/default-organizations';
 import { createDefaultOrganizations } from 'src/lib/organization/organization.seed';
+import { createCurrencies } from 'src/lib/currency/currency.seed';
 
 type IEntity = Pick<EntityMetadata, 'name' | 'tableName'>;
 
@@ -50,6 +51,9 @@ export class SeedDataService {
 
     private async seedBasicDefaultData() {
         this.log(chalk.magenta(`🌱 SEEDING BASIC ${env.production ? 'PRODUCTION' : ''} DATABASE...`));
+
+        // Seed data which only needs connection
+        await this.tryExecute('Currencies', createCurrencies(this.dataSource));
 
         // Default and internal tenant
         const tenantName = DEFAULT_TENANT;

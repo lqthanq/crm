@@ -9,3 +9,8 @@ export const DEFAULT_CURRENCIES = {
     USD: 'US Dollar',
     VND: 'Vietnamese Dong',
 };
+
+export enum ECurrencies {
+    USD = 'USD',
+    VND = 'VND',
+}
