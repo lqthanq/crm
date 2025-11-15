@@ -9,6 +9,7 @@ export interface ICrudService<T> {
     paginate(filter?: FindManyOptions<T>): Promise<IPagination<T>>;
     findOneByIdString(id: string, options?: FindOneOptions<T>): Promise<T>;
 
+    findOneByOptions(options: FindOneOptions<T>): Promise<T | null>;
     findOneByWhereOptions(options: FindOptionsWhere<T>): Promise<T | null>;
 
     create(entity: DeepPartial<T>, ...options: any[]): Promise<T>;

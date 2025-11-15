@@ -13,6 +13,8 @@ export interface IRole extends IRoleCreateInput {
 export enum ERoles {
     SUPER_ADMIN = 'SUPER_ADMIN',
     ADMIN = 'ADMIN',
+    EMPLOYEE = 'EMPLOYEE',
+    MANAGER = 'MANAGER',
     DATA_ENTRY = 'DATA_ENTRY',
     INTERVIEWER = 'INTERVIEWER',
 }

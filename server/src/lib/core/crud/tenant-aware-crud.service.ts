@@ -5,6 +5,7 @@ import { ICrudService } from './icrud.service';
 import { ID, IUser } from 'src/contracts';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { RequestContext } from '../context';
+import { isNotEmpty } from 'src/utils';
 
 export abstract class TenantAwareCrudService<T extends TenantBaseEntity>
     extends CrudService<T>
@@ -65,19 +66,32 @@ export abstract class TenantAwareCrudService<T extends TenantBaseEntity>
 
     /**
      * Creates a new entity instance and copies all entity properties from this object into a new entity.
-     * 
-     * @param entity 
-     * @returns 
+     *
+     * @param entity
+     * @returns
      */
     public async create(entity: DeepPartial<T>): Promise<T> {
         const tenantId = RequestContext.currentTenantId();
-
-        // employeeId
+        const employeeId = RequestContext.currentEmployeeId();
 
         return await super.create({
             ...entity,
             ...(this.repository.metadata?.hasColumnWithPropertyPath('tenantId')
                 ? { tenant: { id: tenantId }, tenantId }
+                : {}),
+
+            /**
+             * If employee has login & create data for self
+             */
+            ...(isNotEmpty(employeeId)
+                ? this.repository.metadata?.hasColumnWithPropertyPath('employeeId')
+                    ? {
+                          employee: {
+                              id: employeeId,
+                          },
+                          employeeId,
+                      }
+                    : {}
                 : {}),
         });
     }
@@ -161,7 +175,7 @@ export abstract class TenantAwareCrudService<T extends TenantBaseEntity>
                       tenantId: user.tenantId,
                   }
                 : {}),
-            // Find conditions with Employee by User
+            ...this.findConditionsWithEmployeeByUser(),
         } as FindOptionsWhere<T>;
     }
 
@@ -188,5 +202,51 @@ export abstract class TenantAwareCrudService<T extends TenantBaseEntity>
         return where
             ? { ...where, ...this.findConditionsWithTenantByUser(user) }
             : { ...this.findConditionsWithTenantByUser(user) };
+    }
+
+    /**
+     * Define find conditions when retrieving data with employee by user.
+     *
+     * @returns
+     */
+    private findConditionsWithEmployeeByUser(): FindOptionsWhere<T> {
+        const employeeId = RequestContext.currentEmployeeId();
+
+        return (
+            isNotEmpty(employeeId)
+                ? this.repository.metadata?.hasColumnWithPropertyPath('employeeId')
+                    ? {
+                          employee: {
+                              id: employeeId!,
+                          },
+                          employeeId: employeeId!,
+                      }
+                    : {}
+                : {}
+        ) as FindOptionsWhere<T>;
+    }
+
+    /**
+     * Find first entity that matches given where condition with current tenant.
+     * @param options
+     * @returns
+     */
+    public async findOneByWhereOptions(options: FindOptionsWhere<T>): Promise<T | null> {
+        const user = RequestContext.currentUser();
+
+        return await super.findOneByWhereOptions({
+            ...options,
+            ...this.findConditionsWithTenantByUser(user!),
+        });
+    }
+
+    /**
+     * Finds first entity that matches given options with current tenant.
+     *
+     * @param options
+     * @returns
+     */
+    public async findOneByOptions(options: FindOneOptions<T>): Promise<T | null> {
+        return await super.findOneByOptions(this.findOneWithTenant(options));
     }
 }

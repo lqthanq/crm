@@ -1,5 +1,9 @@
-import { IBasePerTenantAndOrganizationEntityModel, IBasePerTenantAndOrganizationEntityMutationInput, ID } from "./base-entity.model";
-import { IUser } from "./user.model";
+import {
+    IBasePerTenantAndOrganizationEntityModel,
+    IBasePerTenantAndOrganizationEntityMutationInput,
+    ID,
+} from './base-entity.model';
+import { IUser } from './user.model';
 
 export interface IEmployee extends IBasePerTenantAndOrganizationEntityModel {
     [x: string]: any;
@@ -11,11 +15,20 @@ export interface IEmployee extends IBasePerTenantAndOrganizationEntityModel {
     fullName?: string;
     profile_link?: string;
     isTrackingEnabled: boolean;
-
 }
 
 export interface IEmployeeCreateInput extends IBasePerTenantAndOrganizationEntityMutationInput {
     user?: IUser;
     userId?: ID;
     startedWorkOn?: Date;
+}
+
+export interface IEmployeeEntityInput {
+    employeeId?: ID;
+    employee?: IEmployee;
+}
+
+export interface IMemberEntityBased {
+    memberIds?: ID[];
+    managerIds?: ID[];
 }

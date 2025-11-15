@@ -77,6 +77,16 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         return record;
     }
 
+
+    public async findOneByOptions(options: FindOneOptions<T>):Promise<T | null> {
+        const record = await this.repository.findOne(options);
+        if (!record) {
+            throw new NotFoundException('The requested record was not found');
+        }
+
+        return record;
+    }
+
     /**
      * Finds entities that match given find options.
      */

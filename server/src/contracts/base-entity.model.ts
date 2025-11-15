@@ -2,6 +2,8 @@ import { IOrganization } from './organization.model';
 import { ITenant } from './tenant.model';
 import { IUser } from './user.model';
 
+export type OmitFields<T, K extends keyof T = never> = Omit<T, 'id' | 'createdAt' | 'updatedAt' | K>;
+
 export type ID = string;
 
 export interface IBaseRelationsEntityModel {
@@ -13,7 +15,7 @@ export interface IBaseSoftDeleteEntityModel {
 }
 
 export interface IBaseEntityActionByUserModel {
-    createdByUuser?: IUser;
+    createdByUser?: IUser;
     createdByUserId?: ID;
 
     updatedByUser?: IUser;
@@ -52,4 +54,18 @@ export interface IBasePerTenantEntityMutationInput extends IBaseEntityModel {
 export interface IBasePerTenantAndOrganizationEntityMutationInput extends Partial<IBasePerTenantEntityMutationInput> {
     organizationId?: ID;
     organization?: Partial<IOrganization>;
+}
+
+export interface IBasePerEntityType extends IBasePerTenantAndOrganizationEntityModel {
+    entityId: ID;
+    entity: EBaseEntity;
+}
+
+export enum EBaseEntity {
+    Currency = 'Currency',
+    Employee = 'Employee',
+    Organization = 'Organization',
+    OrganizationTeam = 'OrganizationTeam',
+    User = 'User',
+    Tanent = 'Tanent',
 }

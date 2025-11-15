@@ -15,6 +15,8 @@ import { TransformInterceptor } from '../core/interceptors/transform.interceptor
 import { CacheModule } from '@nestjs/cache-manager';
 import { EmployeeModule } from '../employee/employee.module';
 import { OrganizationModule } from '../organization/organization.module';
+import { OrganizationTeamModule } from '../organization-team/organization-team.module';
+import { EntitySubscriptionModule } from '../entity-subscription/entity-subscription.module';
 
 @Module({
     imports: [
@@ -30,6 +32,8 @@ import { OrganizationModule } from '../organization/organization.module';
         TenantModule,
         EmployeeModule,
         OrganizationModule,
+        OrganizationTeamModule,
+        EntitySubscriptionModule,
     ],
     controllers: [AppController],
     providers: [
