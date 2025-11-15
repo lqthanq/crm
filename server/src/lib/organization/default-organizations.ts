@@ -6,5 +6,6 @@ export const DEFAULT_ORGANIZATIONS: IOrganization[] = [
         name: 'Default Company',
         isDefault: true,
         currency: ECurrencies.USD,
+        totalEmployees: 1,
     },
 ];

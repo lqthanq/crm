@@ -10,5 +10,12 @@ export abstract class BaseEntityEventSubscriber<Entity = any>
         return;
     }
 
+    async beforeEntityCreate(entity: Entity, em?: EntityManager | undefined): Promise<void> {}
+    async beforeEntityUpdate(entity: Entity, em?: EntityManager | undefined): Promise<void> {}
+
+    async afterEntityCreate(entity: Entity, em?: EntityManager | undefined): Promise<void> {}
     async afterEntityLoad(entity: Entity, em?: EntityManager): Promise<void> {}
+    async afterEntityUpdate(entity: Entity, em?: EntityManager): Promise<void> {}
+    async afterEntityDelete(entity: Entity, em?: EntityManager): Promise<void> {}
+    async afterEntitySoftRemove(entity: Entity, em?: EntityManager): Promise<void> {}
 }

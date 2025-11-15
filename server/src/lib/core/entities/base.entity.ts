@@ -16,13 +16,9 @@ import { User } from './internal';
 export abstract class Model {
     constructor(input?: any) {
         if (input) {
-            // for (const [key, value] of Object.entries(input)) {
-            //     (this as any)[key] = value;
-            // }
-
-            // Object.assign(this, input);
-
-            // console.log('this >> ', this);
+            for (const [key, value] of Object.entries(input)) {
+                (this as any)[key] = value;
+            }
         }
     }
 }

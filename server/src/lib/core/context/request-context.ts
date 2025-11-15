@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { CLS_ID, ClsService } from 'nestjs-cls';
 import { v4 as uuidv4 } from 'uuid';
-import { verify } from 'jsonwebtoken';
+import { JsonWebTokenError, verify } from 'jsonwebtoken';
 import { ExtractJwt } from 'passport-jwt';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-import { ELanguages, EPermissions, ID, IUser } from 'src/contracts';
+import { ELanguages, EPermissions, ERoles, ID, IUser } from 'src/contracts';
 import { environment as env } from 'src/config';
 
 export class RequestContext {
@@ -184,5 +184,57 @@ export class RequestContext {
      */
     static hasPermission(permission: EPermissions, throwError?: boolean): boolean {
         return this.hasPermissions([permission], throwError);
+    }
+
+    /**
+     * Checks if the current request has any of the specified roles.
+     */
+    static hasRoles(roles: ERoles[], throwError?: boolean): boolean {
+        const context = RequestContext.currentRequestContext();
+
+        if (context) {
+            try {
+                const token = this.currentToken();
+                if (token) {
+                    const { role } = verify(token, env.JWT_SECRET!) as { id: string; role: ERoles };
+                    return roles.includes(role ?? null);
+                }
+            } catch (error) {
+                if (error instanceof JsonWebTokenError) {
+                    return false;
+                }
+
+                throw error;
+            }
+        }
+
+        if (throwError) {
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the current user has a specific role.
+     */
+    static hasRole(role: ERoles, throwError?: boolean): boolean {
+        return this.hasRoles([role], throwError);
+    }
+
+    /**
+     * Retrieves the current employe ID from the request context;
+     */
+    static currentEmployeeId(): ID |null {
+
+        try {  
+
+            const user = RequestContext.currentUser();
+
+            return user?.employeeId || null;
+        } catch (error) {
+
+            return  null;
+        }
     }
 }

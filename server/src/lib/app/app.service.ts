@@ -2,6 +2,7 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { SeedDataService } from '../core/seeds/seed-data.service';
 import { UserService } from '../user/user.service';
 import chalk from 'chalk';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AppService {

@@ -30,6 +30,7 @@ export class AuthService extends SocialAuthService {
     }
 
     async register(input: IUserRegistrationInput & Partial<IAppIntegrationConfig>, languageCode: ELanguages) {
+        
         // 2. Register new user
         const entity = this.userRepository.create({
             ...input.user,
@@ -45,7 +46,7 @@ export class AuthService extends SocialAuthService {
         // 5. Find the latest registered user with role
         user = (await this.userRepository.findOne({
             where: { id: user.id },
-            relations: {},
+            relations: { role: true },
         })) as User;
 
         // 6. If organizationId is provided, add the user to the organization

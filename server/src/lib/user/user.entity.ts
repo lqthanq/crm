@@ -110,4 +110,11 @@ export class User extends TenantBaseEntity implements IUser {
     })
     @JoinColumn()
     organizations?: IUserOrganization[];
+
+    constructor(input?: any) {
+        super();
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }

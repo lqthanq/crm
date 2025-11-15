@@ -43,3 +43,13 @@ export interface IBasePerTenantAndOrganizationEntityModel extends IBasePerTenant
     organizationId?: ID;
     organization?: IOrganization;
 }
+
+export interface IBasePerTenantEntityMutationInput extends IBaseEntityModel {
+    tenantId?: ID;
+    tenant?: Partial<ITenant>;
+}
+
+export interface IBasePerTenantAndOrganizationEntityMutationInput extends Partial<IBasePerTenantEntityMutationInput> {
+    organizationId?: ID;
+    organization?: Partial<IOrganization>;
+}

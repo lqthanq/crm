@@ -16,9 +16,9 @@ export const createDefaultOrganizations = async (
 
     const defaultOrganizations: IOrganization[] = [];
     for (const organization of organizations) {
-        const { name, isDefault } = organization;
+        const { name, isDefault, currency } = organization;
 
-        const defaultOrganization = new Organization({ name, isDefault });
+        const defaultOrganization = new Organization({ name, isDefault, currency });
         defaultOrganizations.push(defaultOrganization);
     }
 

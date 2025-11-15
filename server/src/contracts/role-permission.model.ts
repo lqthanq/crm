@@ -18,6 +18,7 @@ export enum EPermissions {
 
     // Employee CRUD Permissions
     ORG_EMPLOYEES_VIEW = 'ORG_EMPLOYEES_VIEW',
+    ORG_EMPLOYEES_EDIT = 'ORG_EMPLOYEES_EDIT',
 
     /** Time Off CRUD Permissions */
     CHANGE_SELECTED_EMPLOYEE = 'CHANGE_SELECTED_EMPLOYEE',

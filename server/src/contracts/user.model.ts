@@ -1,4 +1,5 @@
 import { IBasePerTenantEntityModel } from './base-entity.model';
+import { IEmployee } from './employee.model';
 import { ELanguages } from './language.model';
 import { IRole } from './role.model';
 import { IUserOrganization } from './user-organization.model';
@@ -14,6 +15,9 @@ export interface IUser extends IBasePerTenantEntityModel {
     roleId?: IRole['id'];
 
     hash?: string;
+
+    employee?: IEmployee;
+    employeeId?: IEmployee['id'];
     preferredLanguage?: ELanguages;
 
     organizations?: IUserOrganization[];

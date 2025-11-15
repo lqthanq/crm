@@ -8,7 +8,7 @@ console.time('✔ Total API Startup Time');
 
 // Import bootstrap
 console.time('✔ Bootstrap Import Time');
-import { bootstrap } from './lib/bootstap';
+import { bootstrap } from './lib/bootstrap';
 console.timeEnd('✔ Bootstrap Import Time');
 console.log('API Core Bootstrap Loaded');
 

@@ -13,6 +13,8 @@ import { TenantModule } from '../tenant/tenant.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from '../core/interceptors/transform.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
+import { EmployeeModule } from '../employee/employee.module';
+import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
     imports: [
@@ -26,6 +28,8 @@ import { CacheModule } from '@nestjs/cache-manager';
         UserModule,
         SeederModule,
         TenantModule,
+        EmployeeModule,
+        OrganizationModule,
     ],
     controllers: [AppController],
     providers: [

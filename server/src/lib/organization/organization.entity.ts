@@ -18,6 +18,10 @@ export class Organization extends TenantBaseEntity implements IOrganization {
     @Column('boolean', { default: false })
     isDefault: boolean;
 
+    @Index()
+    @Column({ nullable: true })
+    totalEmployees: number;
+
     @ApiProperty({
         enum: ECurrencies,
         example: ECurrencies.USD,
@@ -29,6 +33,9 @@ export class Organization extends TenantBaseEntity implements IOrganization {
     @Index()
     @Column()
     currency: string;
+
+    @Column({ nullable: true, default: true })
+    invitesAllowed?: boolean;
 
     constructor(input?: any) {
         super();

@@ -12,6 +12,7 @@ export interface IRole extends IRoleCreateInput {
 
 export enum ERoles {
     SUPER_ADMIN = 'SUPER_ADMIN',
+    ADMIN = 'ADMIN',
     DATA_ENTRY = 'DATA_ENTRY',
     INTERVIEWER = 'INTERVIEWER',
 }

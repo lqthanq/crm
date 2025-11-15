@@ -8,7 +8,11 @@ export class CreateOrganizationDTO
     extends IntersectionType(PickType(Organization, ['name'] as const))
     implements IOrganizationCreateInput
 {
-    @ApiProperty({ enum: ECurrencies, example: ECurrencies.USD, required: true })
+    @ApiProperty({
+        enum: ECurrencies,
+        example: ECurrencies.USD,
+        required: true,
+    })
     @IsNotEmpty()
     @IsEnum(ECurrencies)
     readonly currency: ECurrencies;

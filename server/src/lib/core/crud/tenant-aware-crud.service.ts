@@ -63,6 +63,25 @@ export abstract class TenantAwareCrudService<T extends TenantBaseEntity>
         });
     }
 
+    /**
+     * Creates a new entity instance and copies all entity properties from this object into a new entity.
+     * 
+     * @param entity 
+     * @returns 
+     */
+    public async create(entity: DeepPartial<T>): Promise<T> {
+        const tenantId = RequestContext.currentTenantId();
+
+        // employeeId
+
+        return await super.create({
+            ...entity,
+            ...(this.repository.metadata?.hasColumnWithPropertyPath('tenantId')
+                ? { tenant: { id: tenantId }, tenantId }
+                : {}),
+        });
+    }
+
     private findOneWithTenant(filter?: FindOneOptions<T>): FindOneOptions<T> {
         const user = RequestContext.currentUser();
 

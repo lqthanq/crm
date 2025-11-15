@@ -2,7 +2,7 @@ import { EPermissions, ERoles } from 'src/contracts';
 
 export const DEFAULT_ROLE_PERMISSIONS = [
     {
-        role: ERoles.SUPER_ADMIN,
+        role: ERoles.ADMIN,
         defaultEnabledPermissions: [
             EPermissions.ADMIN_DASHBOARD_VIEW,
             EPermissions.TEAM_DASHBOARD,

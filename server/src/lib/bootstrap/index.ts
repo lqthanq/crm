@@ -1,5 +1,5 @@
 import { INestApplication, Type } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import chalk from 'chalk';
 
@@ -11,6 +11,7 @@ import { AppModule } from '../app/app.module';
 import { AppService } from '../app/app.service';
 import { coreSubscribers } from '../core/entities/subscribers';
 import { setupSwagger } from './swagger';
+import { AuthGuard } from '../shared/guards';
 
 export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>): Promise<INestApplication | void> {
     console.time(chalk.yellow('✅ Total Application Bootstrap Time'));
@@ -33,6 +34,10 @@ export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>
 
     // Starts listening for shutdown hooks
     app.enableShutdownHooks();
+
+    // This will lock all routes and make them accessible by authenticated users only.
+    const reflector = app.get(Reflector);
+    app.useGlobalGuards(new AuthGuard(reflector));
 
     // Handle uncaught exceptions and unhandled rejections
     process.on('uncaughtException', handleUncaughtException);
