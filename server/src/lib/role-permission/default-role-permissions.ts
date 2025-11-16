@@ -9,6 +9,8 @@ export const DEFAULT_ROLE_PERMISSIONS = [
             EPermissions.ORG_CANDIDATES_INTERVIEW_EDIT,
             EPermissions.ORG_CANDIDATES_INTERVIEW_VIEW,
             EPermissions.ORG_CANDIDATES_DOCUMENTS_VIEW,
+            EPermissions.ALL_ORG_VIEW,
+            EPermissions.ALL_ORG_EDIT,
         ],
     },
     {

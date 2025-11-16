@@ -6,6 +6,7 @@ export * from './entity-type-base.entity';
 // core entities
 export * from '../../currency/currency.entity';
 export * from '../../email-template/email-template.entity';
+export * from '../../employee/employee.entity';
 export * from '../../feature/feature.entity';
 export * from '../../feature/feature-organization.entity';
 export * from '../../organization/organization.entity';

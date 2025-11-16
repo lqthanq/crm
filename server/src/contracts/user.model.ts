@@ -65,3 +65,7 @@ export interface IAuthResponse {
     token: string;
     refresh_token?: string;
 }
+
+export interface IUserTokenInput {
+    token: string;
+}

@@ -7,6 +7,10 @@ export interface Env {
     [key: string]: string;
 }
 
+export interface ICRMFeatures {
+    [key: string]: boolean;
+}
+
 export interface IEnvironment {
     clientBaseUrl: string;
 
@@ -27,5 +31,5 @@ export interface IEnvironment {
     smtpConfig?: ISMTPConfig;
 
     /** Email Template Config */
-    appIntegrationConfig?: IAppIntegrationConfig
+    appIntegrationConfig?: IAppIntegrationConfig;
 }

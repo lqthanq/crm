@@ -1,11 +1,11 @@
-import { Body, Controller, Headers, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Public } from 'src/common';
-import { ELanguages, IUser } from 'src/contracts';
-import { RegisterUserDTO } from '../user/dto';
-import { AuthRegisterCommand } from './commands';
+import { ELanguages, IAuthResponse, IUser } from 'src/contracts';
+import { RegisterUserDTO, UserLoginDTO } from '../user/dto';
+import { AuthLoginCommand, AuthRegisterCommand } from './commands';
 import { UseValidationPipe } from '../shared';
 
 @ApiTags('Auth')
@@ -32,5 +32,19 @@ export class AuthController {
         return await this.commandBus.execute(
             new AuthRegisterCommand({ originalUrl: origin, ...input }, ELanguages.ENGLISH),
         );
+    }
+
+    /**
+     * User login
+     * 
+     * @param input 
+     * @returns 
+     */
+    @HttpCode(HttpStatus.OK)
+    @Post('/login')
+    @Public()
+    @UseValidationPipe({ transform: true })
+    async login(@Body() input: UserLoginDTO): Promise<IAuthResponse | null> {
+        return await this.commandBus.execute(new AuthLoginCommand(input));
     }
 }

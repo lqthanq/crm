@@ -101,12 +101,12 @@ export abstract class BaseEntity extends BaseEntityActionByUser implements IBase
 
     @ApiPropertyOptional({
         type: Boolean,
-        default: false,
+        default: true,
     })
     @IsOptional()
     @IsBoolean()
     @Index()
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: true })
     isActive?: boolean;
 
     @ApiPropertyOptional({
@@ -116,7 +116,7 @@ export abstract class BaseEntity extends BaseEntityActionByUser implements IBase
     @IsOptional()
     @IsBoolean()
     @Index()
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: false })
     isArchived?: boolean;
 
     @ApiPropertyOptional({

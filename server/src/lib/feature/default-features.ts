@@ -59,4 +59,12 @@ export const DEFAULT_FEATURES: IFeatureCreateInput[] = [
         isEnabled: true,
         status: 'primary',
     },
+    {
+        name: 'Email Verification',
+        code: EFeatures.FEATURE_EMAIL_VERIFICATION,
+        description: 'Email Verification',
+        link: '',
+        isEnabled: true,
+        status: 'primary',
+    },
 ];

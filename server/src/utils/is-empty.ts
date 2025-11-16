@@ -17,6 +17,5 @@ export function isEmpty(item: any): boolean {
 
     const strValue = (item + '').toLowerCase();
 
-    console.log('strValue', strValue);
     return !strValue || strValue === 'null' || strValue === 'undefined';
 }

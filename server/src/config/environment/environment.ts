@@ -1,4 +1,5 @@
-import { IEnvironment } from './environment.interface';
+import { isFeatureEnabled } from './environment.helper';
+import { ICRMFeatures, IEnvironment } from './environment.interface';
 
 export const environment: IEnvironment = {
     clientBaseUrl: process.env.CLIENT_BASE_URL || 'http://localhost:4200',
@@ -32,6 +33,11 @@ export const environment: IEnvironment = {
 
     appIntegrationConfig: {
         appName: process.env.APP_NAME || 'CRM',
-        appEmailConfirmationUrl: process.env.APP_EMAIL_CONFIRMATION_URL || `${process.env.CLIENT_BASE_URL}/auth/confirm-email`
-    }
+        appEmailConfirmationUrl:
+            process.env.APP_EMAIL_CONFIRMATION_URL || `${process.env.CLIENT_BASE_URL}/auth/confirm-email`,
+    },
+};
+
+export const toggleFeatures: ICRMFeatures = {
+    FEATURE_EMAIL_VERIFICATION: isFeatureEnabled('FEATURE_EMAIL_VERIFICATION'),
 };

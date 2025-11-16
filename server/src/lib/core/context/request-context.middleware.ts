@@ -33,7 +33,7 @@ export class RequestContextMiddleware implements NestMiddleware {
             }
 
             // Capture the original res.end function
-            const originalEnd = res.send.bind(res);
+            const originalEnd = res.end.bind(res);
 
             // Override the res.end function to log when the response finishes
             res.end = (...args: any[]): Response => {

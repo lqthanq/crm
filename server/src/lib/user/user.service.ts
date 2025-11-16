@@ -6,6 +6,7 @@ import { TenantAwareCrudService } from '../core/crud';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { ID } from 'src/contracts';
+import { freshTimestamp } from '../core';
 
 @Injectable()
 export class UserService extends TenantAwareCrudService<User> {
@@ -48,5 +49,33 @@ export class UserService extends TenantAwareCrudService<User> {
         } catch (error) {
             console.log('Error while updating last login time', error);
         }
+    }
+
+    /**
+     * Retrieves a user with the given ID if it exists.
+     *
+     * @param id
+     * @returns
+     */
+    async getIfExists(id: string): Promise<User | null> {
+        return await this.repository.findOneBy({ id });
+    }
+
+    /**
+     * Marked email as verified for user
+     * 
+     * @param id 
+     * @returns 
+     */
+    public async markEmailAsVerified(id: ID) {
+        return await this.repository.update(
+            { id },
+            {
+                emailVerifiedAt: freshTimestamp(),
+                emailToken: null,
+                code: null,
+                codeExpireAt: null,
+            },
+        );
     }
 }

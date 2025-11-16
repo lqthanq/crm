@@ -37,7 +37,7 @@ export class TenantService extends CrudService<Tenant> {
         // Find SUPER_ADMIN role to relative tenant.
         const role = await this.roleRepository.findOneBy({
             tenantId,
-            name: ERoles.SUPER_ADMIN,
+            name: ERoles.ADMIN,
         });
 
         // Update the user entity to assign the specified tenant and role.

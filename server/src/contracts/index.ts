@@ -7,6 +7,7 @@ export * from './entity-subscription.model';
 export * from './feature.model';
 export * from './http-status.enum';
 export * from './language.model';
+export * from './organization-project.model';
 export * from './organization-team-employee.model';
 export * from './organization-team.model';
 export * from './organization.model';

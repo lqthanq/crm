@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { sign } from 'jsonwebtoken';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { sign, verify } from 'jsonwebtoken';
 import moment from 'moment';
 import bcrypt from 'bcrypt';
 
-import { IUser, IVerificationTokenPayload } from 'src/contracts';
+import { EFeatures, IUser, IUserTokenInput, IVerificationTokenPayload } from 'src/contracts';
 import { IAppIntegrationConfig } from 'src/common';
-import { environment as env } from 'src/config';
+import { environment as env, environment } from 'src/config';
 
 import { EmailService } from '../email-send/email.service';
 import { deepMerge, generateAlphaNumericCode } from 'src/utils';
 import { UserService } from '../user/user.service';
+import { FeatureService } from '../feature/feature.service';
 
 @Injectable()
 export class EmailConfirmationService {
     constructor(
         private readonly userService: UserService,
         private readonly emailService: EmailService,
+        private readonly featureFlagService: FeatureService,
     ) {}
 
     /**
@@ -54,6 +56,60 @@ export class EmailConfirmationService {
             return await this.emailService.emailVerification(user, verificationLink, verificationCode, appIntegration);
         } catch (error) {
             console.log(error, 'Error while sending verfication email');
+        }
+    }
+
+    public async decodeConfirmationToken(token: IUserTokenInput['token']): Promise<IUser | void> {
+        if (!(await this.featureFlagService.isFeatureEnabled(EFeatures.FEATURE_EMAIL_VERIFICATION))) {
+            return;
+        }
+
+        try {
+            const payload = verify(token, environment.JWT_REFRESH_TOKEN_SECRET!);
+
+            if (typeof payload === 'object' && 'email' in payload && 'id' in payload) {
+                const { id, email } = payload;
+                const user = await this.userService.findOneByOptions({
+                    where: { id, email },
+                });
+
+                if (!!user?.emailVerifiedAt) {
+                    throw new BadRequestException('Your email is already verified.');
+                }
+
+                if (!!user?.emailToken && !!(await bcrypt.compare(token, user.emailToken))) {
+                    return user;
+                }
+            }
+
+            throw new BadRequestException('Failed to verify email.');
+        } catch (error) {
+            if (error?.name === 'TokenExpiredError') {
+                throw new BadRequestException('JWT token has been expired.');
+            }
+
+            throw new BadRequestException(error?.message);
+        }
+    }
+
+    /**
+     * Confirm user email
+     *
+     * @param user
+     * @returns
+     */
+    public async confirmEmail(user: IUser) {
+        if (!(await this.featureFlagService.isFeatureEnabled(EFeatures.FEATURE_EMAIL_VERIFICATION))) {
+            return;
+        }
+
+        try {
+            await this.userService.markEmailAsVerified(user['id']!);
+        } finally {
+            return new Object({
+                status: HttpStatus.OK,
+                message: 'OK',
+            });
         }
     }
 }

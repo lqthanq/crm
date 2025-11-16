@@ -18,6 +18,6 @@ import { RolePermissionModule } from '../role-permission/role-permission.module'
     ],
     controllers: [EmployeeController],
     providers: [EmployeeService, EmployeeRepository, ...CommandHandlers],
-    exports: [EmployeeRepository]
+    exports: [EmployeeService, EmployeeRepository]
 })
 export class EmployeeModule {}

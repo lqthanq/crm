@@ -61,6 +61,7 @@ export class PermissionGuard extends BaseGuard implements CanActivate {
             // Check if user has the required permissions
             isAuthorized = await this._rolePermissionService.checkRolePermission(tenantId!, roleId!, permissions, true);
 
+            console.log('isAuthorized ', isAuthorized)
             await this._cacheManager.set(cacheKey, isAuthorized, 5 * 60 * 1000); // 5 minutes cache expiration time for User Permissions
         } else {
             isAuthorized = fromCache;

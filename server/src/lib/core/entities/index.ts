@@ -1,6 +1,7 @@
 import {
     Currency,
     EmailTemplate,
+    Employee,
     Feature,
     FeatureOrganization,
     Organization,
@@ -16,6 +17,7 @@ import {
 export const coreEntities = [
     Currency,
     EmailTemplate,
+    Employee,
     Feature,
     FeatureOrganization,
     Organization,

@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { pick } from 'underscore';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload, sign } from 'jsonwebtoken';
 
 import { SocialAuthService } from 'src/auth';
 import { UserRepository } from '../user/user.repository';
-import { IUserRegistrationInput, ELanguages, IUserLoginInput, IAuthResponse, IUser } from 'src/contracts';
+import { IUserRegistrationInput, ELanguages, IUserLoginInput, IAuthResponse, IUser, IEmployee } from 'src/contracts';
 import { IAppIntegrationConfig } from 'src/common';
 import { User } from '../user/user.entity';
 import { EmailConfirmationService } from './email-confirmation.service';
@@ -16,24 +16,28 @@ import { EventBus } from '../event-bus/event-bus';
 import { UserService } from '../user/user.service';
 import { IsNull, Not } from 'typeorm';
 import { environment } from 'src/config';
+import { EmployeeService } from '../employee/employee.service';
 
 @Injectable()
 export class AuthService extends SocialAuthService {
     constructor(
+        private readonly eventBus: EventBus,
         private readonly userRepository: UserRepository,
         private readonly emailConfirmationService: EmailConfirmationService,
         private readonly emailService: EmailService,
-        private readonly eventBus: EventBus,
         private readonly userService: UserService,
+        private readonly employeeService: EmployeeService,
     ) {
         super();
     }
 
     async register(input: IUserRegistrationInput & Partial<IAppIntegrationConfig>, languageCode: ELanguages) {
-        
+        let tenant = input.user.tenant;
+
         // 2. Register new user
         const entity = this.userRepository.create({
             ...input.user,
+            tenant,
             ...(input.password ? { hash: await this.getPasswordHash(input.password) } : {}),
         });
 
@@ -79,7 +83,7 @@ export class AuthService extends SocialAuthService {
             // find ALL users by email
             const users = await this.userService.find({
                 where: { email, isActive: true, isArchived: false, hash: Not(IsNull()) },
-                // relations: { role: true },
+                relations: { role: true },
                 order: { updatedAt: 'DESC' }, // Order by update time, latest first
             });
 
@@ -89,7 +93,7 @@ export class AuthService extends SocialAuthService {
             }
 
             // Validate each user individually to avoid cascade failures
-            const userValidations: { user: User }[] = [];
+            const userValidations: { user: User; employee: IEmployee }[] = [];
 
             for (const user of users) {
                 // Check password (let real bcrypt errors bubble up)
@@ -105,11 +109,33 @@ export class AuthService extends SocialAuthService {
                     continue;
                 }
 
-                // TODO:
                 // Fetch employee record
+                let employee: IEmployee | null = null;
+                let isEmployeeValid = true;
 
-                userValidations.push({ user });
+                try {
+                    employee = await this.employeeService.findOneByUserId(user.id!);
+
+                    console.log('employee >>', employee);
+                    if (employee) {
+                        isEmployeeValid = !!employee.isActive && !employee.isArchived;
+                    }
+                } catch (employeeError) {
+                    if (employeeError instanceof NotFoundException) {
+                        employee = null;
+                        isEmployeeValid = true;
+                    } else {
+                        throw employeeError;
+                    }
+                }
+
+                // Only add to validations if both password and employee status is valid
+                if (isEmployeeValid) {
+                    userValidations.push({ user, employee: employee! });
+                }
             }
+
+            console.log('userValidations >>', userValidations);
 
             // If no valid users are found after validation, throw an error
             if (userValidations.length === 0) {
@@ -117,7 +143,7 @@ export class AuthService extends SocialAuthService {
             }
 
             // Select the most recently updated user (already sorted by updatedAt DESC)
-            const { user: selectedUser } = userValidations[0];
+            const { user: selectedUser, employee } = userValidations[0];
 
             // Generate both access and refresh tokens concurrently
             const [access_token, refresh_token] = await Promise.all([
@@ -134,7 +160,7 @@ export class AuthService extends SocialAuthService {
             return {
                 user: new User({
                     ...selectedUser,
-                    // TODO:
+                    ...(employee && { employee }),
                 }),
                 token: access_token,
                 refresh_token: refresh_token,
@@ -152,7 +178,7 @@ export class AuthService extends SocialAuthService {
         const tenantId = request.tenantId || RequestContext.currentTenantId();
         try {
             // Validate that the request contains a user ID
-            if (request.id) {
+            if (!request.id) {
                 throw new Error('User ID is missing in the request.');
             }
 
@@ -165,8 +191,7 @@ export class AuthService extends SocialAuthService {
                     isActive: true,
                     isArchived: false,
                 },
-                // relations
-
+                relations: { role: { rolePermissions: true } },
                 order: { createdAt: 'DESC' },
             });
 
@@ -177,18 +202,21 @@ export class AuthService extends SocialAuthService {
             }
 
             // Retrieve the employee details associated with the user.
+            const employee = await this.employeeService.findOneByUserId(user.id!);
 
             // Create a payload for the JWT token
             const payload: JwtPayload = {
                 id: user.id,
                 tenantId: user.tenantId ?? null,
-                employeeId: null, //
-                role: null, //
-                permissions: null, //
+                employeeId: employee ? employee.id : null,
+                role: user.role ? user.role.name : null,
+                permissions: user.role?.rolePermissions?.filter((rp) => rp.enabled).map((rp) => rp.permission) ?? null,
             };
 
             // Generate the JWT access token using the payload
-            return sign(payload, environment.JWT_SECRET!, {});
+            return sign(payload, environment.JWT_SECRET!, {
+                expiresIn: `${environment.JWT_TOKEN_EXPIRATION_TIME!}s`,
+            });
         } catch (error) {
             console.log('Error while generating JWT access token:', error);
             throw new UnauthorizedException();
@@ -210,7 +238,7 @@ export class AuthService extends SocialAuthService {
                 id: user.id,
                 email: user.email,
                 tenantId: user.tenantId || null,
-                role: null, //
+                role: user.role ? user.role.name : null,
             };
 
             // Generate the JWT refresh token
@@ -220,5 +248,9 @@ export class AuthService extends SocialAuthService {
         } catch (error) {
             console.log('Error while generating JWT refresh token:', error);
         }
+    }
+
+    async getAuthenticatedUser(id: string): Promise<User | null> {
+        return this.userService.getIfExists(id);
     }
 }

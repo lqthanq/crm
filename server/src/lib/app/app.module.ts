@@ -17,6 +17,7 @@ import { EmployeeModule } from '../employee/employee.module';
 import { OrganizationModule } from '../organization/organization.module';
 import { OrganizationTeamModule } from '../organization-team/organization-team.module';
 import { EntitySubscriptionModule } from '../entity-subscription/entity-subscription.module';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { EntitySubscriptionModule } from '../entity-subscription/entity-subscrip
         CacheModule.register({ isGlobal: true }),
         AuthModule,
         CoreModule,
+        SharedModule,
         UserModule,
         SeederModule,
         TenantModule,

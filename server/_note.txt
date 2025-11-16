@@ -2,3 +2,27 @@ curl -X 'POST' \
   'http://localhost:3000/api/auth/register' \
   -H 'Content-Type: application/json' \
   -d '{"password": "admin", "confirmPassword": "admin",  "user": {"firstName": "Lee", "lastName": "Code", "email": "leecode2512@gmail.com"}}'
+
+  -- {"deletedAt":null,"createdAt":"2025-11-16T12:07:59.532Z","updatedAt":"2025-11-16T12:07:59.532Z","createdByUserId":null,"updatedByUserId":null,"deletedByUserId":null,"id":"123c3105-2342-4e35-adab-f1b7f661ad53","isActive":null,"isArchived":null,"archivedAt":null,"tenantId":null,"firstName":"Lee","lastName":"Code","email":"leecode2512@gmail.com","timezone":null,"preferredLanguage":"en","lastLoginAt":null,"name":"Lee Code","isEmailVerified":false,"role":null,"roleId":null}
+
+
+
+curl -X 'POST' \
+  'http://localhost:3000/api/auth/login' \
+  -H 'Content-Type: application/json' \
+  -d '{"password": "admin", "email": "leecode2512@gmail.com"}'
+
+  -- {"user":{"deletedAt":null,"createdAt":"2025-11-16T13:11:57.351Z","updatedAt":"2025-11-16T13:11:57.452Z","createdByUserId":null,"updatedByUserId":null,"deletedByUserId":null,"id":"6791b9ac-a801-40c8-9215-88ff95204d04","isActive":true,"isArchived":false,"archivedAt":null,"tenantId":null,"firstName":"Lee","lastName":"Code","email":"leecode2512@gmail.com","timezone":null,"preferredLanguage":"en","lastLoginAt":null,"name":"Lee Code","isEmailVerified":false,"role":null,"roleId":null},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OTFiOWFjLWE4MDEtNDBjOC05MjE1LTg4ZmY5NTIwNGQwNCIsInRlbmFudElkIjpudWxsLCJlbXBsb3llZUlkIjpudWxsLCJyb2xlIjpudWxsLCJwZXJtaXNzaW9ucyI6bnVsbCwiaWF0IjoxNzYzMjk4ODI2LCJleHAiOjE3NjMzODUyMjZ9.Nj3osIskLfuGhc2D8aBmCnraq-j4a8zqhkAPol5OOgk","refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OTFiOWFjLWE4MDEtNDBjOC05MjE1LTg4ZmY5NTIwNGQwNCIsImVtYWlsIjoibGVlY29kZTI1MTJAZ21haWwuY29tIiwidGVuYW50SWQiOm51bGwsInJvbGUiOm51bGwsImlhdCI6MTc2MzI5ODgyNiwiZXhwIjoxNzYzMzg1MjI2fQ.1CVuCrfuI3TSbqVtAR02BcZRvIeVZvmmjXXj8-9SrQA"}
+
+
+curl -X 'POST' \
+  'http://localhost:3000/api/tenant' \
+  -H 'Content-Type: application/json' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OTFiOWFjLWE4MDEtNDBjOC05MjE1LTg4ZmY5NTIwNGQwNCIsInRlbmFudElkIjpudWxsLCJlbXBsb3llZUlkIjpudWxsLCJyb2xlIjpudWxsLCJwZXJtaXNzaW9ucyI6bnVsbCwiaWF0IjoxNzYzMjk4ODI2LCJleHAiOjE3NjMzODUyMjZ9.Nj3osIskLfuGhc2D8aBmCnraq-j4a8zqhkAPol5OOgk' \
+  -d '{"name": "TTenant"}'
+
+  curl -X 'POST' \
+  'http://localhost:3000/api/organization' \
+  -H 'Content-Type: application/json' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OTFiOWFjLWE4MDEtNDBjOC05MjE1LTg4ZmY5NTIwNGQwNCIsInRlbmFudElkIjpudWxsLCJlbXBsb3llZUlkIjpudWxsLCJyb2xlIjpudWxsLCJwZXJtaXNzaW9ucyI6bnVsbCwiaWF0IjoxNzYzMjk4ODI2LCJleHAiOjE3NjMzODUyMjZ9.Nj3osIskLfuGhc2D8aBmCnraq-j4a8zqhkAPol5OOgk' \
+  -d '{"name": "TTenant", "tenantId": "6c46f4bd-40ea-4bb8-a3e9-cd48bc85b3bc", "currency": "VND", "invitesAllowed": true}'

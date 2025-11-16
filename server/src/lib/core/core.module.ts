@@ -11,7 +11,7 @@ export class CoreModule implements NestModule {
     /**
      * Configures middleware for the application
      */
-    configure(consumer: MiddlewareConsumer) {
+    configure(consumer: MiddlewareConsumer): void {
         consumer.apply(RequestContextMiddleware).forRoutes('*');
     }
 }

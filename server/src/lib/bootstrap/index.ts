@@ -12,6 +12,8 @@ import { AppService } from '../app/app.service';
 import { coreSubscribers } from '../core/entities/subscribers';
 import { setupSwagger } from './swagger';
 import { AuthGuard } from '../shared/guards';
+import { useContainer } from 'class-validator';
+import { SharedModule } from '../shared/shared.module';
 
 export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>): Promise<INestApplication | void> {
     console.time(chalk.yellow('✅ Total Application Bootstrap Time'));
@@ -48,6 +50,8 @@ export async function bootstrap(pluginConfig?: Partial<IApplicationPluginConfig>
 
     const service = app.select(AppModule).get(AppService);
     await service.seedDBIfEmpty();
+
+    useContainer(app.select(SharedModule), { fallbackOnErrors: true });
 
     // Start the server
     const { port = 3000, host = '0.0.0.0' } = pluginConfig?.apiConfigOptions as IApiServerConfigurationOptions;

@@ -58,8 +58,9 @@ export class EmailSendService {
                 from: smtpConfig.fromAddress || 'noreply@crm.com',
             },
             // if you want to send email in development or test environments, set options.send to true
-            // send: true,
+            send: true,
             transport: transport,
+            preview: false,
             i18n: {},
             views: {
                 options: {

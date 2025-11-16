@@ -9,7 +9,7 @@ export const createCurrencies = async (dataSource: DataSource): Promise<ICurrenc
             const entries = DEFAULT_CURRENCIES;
 
             for (const key of Object.keys(entries)) {
-                if (Object.prototype.hasOwnProperty(key)) {
+                if (Object.prototype.hasOwnProperty.call(entries, key)) {
                     const currency: ICurrency = {
                         isoCode: key,
                         currency: entries[key],
