@@ -3,7 +3,15 @@ import { sign, verify } from 'jsonwebtoken';
 import moment from 'moment';
 import bcrypt from 'bcrypt';
 
-import { EFeatures, IUser, IUserTokenInput, IVerificationTokenPayload } from 'src/contracts';
+import {
+    EFeatures,
+    IBasePerTenantEntityModel,
+    IUser,
+    IUserCodeInput,
+    IUserEmailInput,
+    IUserTokenInput,
+    IVerificationTokenPayload,
+} from 'src/contracts';
 import { IAppIntegrationConfig } from 'src/common';
 import { environment as env, environment } from 'src/config';
 
@@ -11,6 +19,7 @@ import { EmailService } from '../email-send/email.service';
 import { deepMerge, generateAlphaNumericCode } from 'src/utils';
 import { UserService } from '../user/user.service';
 import { FeatureService } from '../feature/feature.service';
+import { IsNull, MoreThanOrEqual } from 'typeorm';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -110,6 +119,40 @@ export class EmailConfirmationService {
                 status: HttpStatus.OK,
                 message: 'OK',
             });
+        }
+    }
+
+    public async confirmationByCode(
+        payload: IUserEmailInput & IUserCodeInput & IBasePerTenantEntityModel,
+    ): Promise<IUser | void> {
+        if (!(await this.featureFlagService.isFeatureEnabled(EFeatures.FEATURE_EMAIL_VERIFICATION))) {
+            return;
+        }
+
+        try {
+            const { email, code, tenantId } = payload;
+
+            if (email && code) {
+                const user = await this.userService.findOneByOptions({
+                    where: [
+                        {
+                            email,
+                            code,
+                            tenantId,
+                            codeExpireAt: MoreThanOrEqual(new Date()),
+                        },
+                        { email, code, tenantId, codeExpireAt: IsNull() },
+                    ],
+                });
+
+                if (!!user?.emailVerifiedAt) {
+                    throw new BadRequestException('Your email is already verified.');
+                }
+
+                return user as IUser;
+            }
+        } catch (error) {
+            throw new BadRequestException('Your email is already verified.');
         }
     }
 }

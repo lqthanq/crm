@@ -14,7 +14,7 @@ import { EFeatures } from 'src/contracts';
 import { EmailConfirmationService } from './email-confirmation.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { UseValidationPipe } from '../shared';
-import { ConfirmEmailByTokenDTO } from './dto';
+import { ConfirmEmailByCodeDTO, ConfirmEmailByTokenDTO } from './dto';
 
 @UseGuards(FeatureFlagGuard)
 @FeatureFlag(EFeatures.FEATURE_EMAIL_VERIFICATION)
@@ -30,6 +30,18 @@ export class EmailVerificationController {
     @UseValidationPipe({ whitelist: true })
     public async confirmEmail(@Body() body: ConfirmEmailByTokenDTO): Promise<Object | void> {
         const user = await this.emailConfirmationService.decodeConfirmationToken(body.token);
+        if (!!user) {
+            return await this.emailConfirmationService.confirmEmail(user);
+        }
+    }
+
+    @ApiOperation({ summary: 'Email verfification by code' })
+    @HttpCode(HttpStatus.OK)
+    @Public()
+    @Post('code')
+    @UseValidationPipe({ whitelist: true })
+    public async confirmEmailByCode(@Body() body: ConfirmEmailByCodeDTO): Promise<Object | void> {
+        const user = await this.emailConfirmationService.confirmationByCode(body);
         if (!!user) {
             return await this.emailConfirmationService.confirmEmail(user);
         }

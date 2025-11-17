@@ -69,3 +69,7 @@ export interface IAuthResponse {
 export interface IUserTokenInput {
     token: string;
 }
+
+export interface IUserCodeInput {
+    code: string;
+}
