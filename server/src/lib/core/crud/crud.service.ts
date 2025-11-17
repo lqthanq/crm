@@ -18,6 +18,10 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 export abstract class CrudService<T extends BaseEntity> implements ICrudService<T> {
     constructor(protected readonly repository: Repository<T>) {}
 
+    public get tableName(): string {
+        return this.repository.metadata.tableName;
+    }
+
     public async count(options?: FindManyOptions<T>) {
         const ormOptions = parseFindCountOptions(options as FindManyOptions);
         return await this.repository.count(ormOptions);
@@ -69,7 +73,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
      * Find first entity that matches given where condition.
      */
     public async findOneByWhereOptions(options: FindOptionsWhere<T>): Promise<T | null> {
-        const record = this.repository.findOneBy(options);
+        const record = await this.repository.findOneBy(options);
         if (!record) {
             throw new NotFoundException(`The requested record was not found`);
         }

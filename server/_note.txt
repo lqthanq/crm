@@ -1,3 +1,6 @@
+curl 'http://localhost:3000/api'
+
+
 curl -X 'POST' \
   'http://localhost:3000/api/auth/register' \
   -H 'Content-Type: application/json' \
@@ -26,3 +29,15 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OTFiOWFjLWE4MDEtNDBjOC05MjE1LTg4ZmY5NTIwNGQwNCIsInRlbmFudElkIjpudWxsLCJlbXBsb3llZUlkIjpudWxsLCJyb2xlIjpudWxsLCJwZXJtaXNzaW9ucyI6bnVsbCwiaWF0IjoxNzYzMjk4ODI2LCJleHAiOjE3NjMzODUyMjZ9.Nj3osIskLfuGhc2D8aBmCnraq-j4a8zqhkAPol5OOgk' \
   -d '{"name": "TTenant", "tenantId": "6c46f4bd-40ea-4bb8-a3e9-cd48bc85b3bc", "currency": "VND", "invitesAllowed": true}'
+
+curl -X 'POST' \
+  'http://localhost:3000/api/auth/email/verify/code' \
+  -H 'Content-Type: application/json' \
+  -d '{"email": "leecode2512@gmail.com", "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OTFiOWFjLWE4MDEtNDBjOC05MjE1LTg4ZmY5NTIwNGQwNCIsImVtYWlsIjoibGVlY29kZTI1MTJAZ21haWwuY29tIiwiaWF0IjoxNzYzMjk4NzE3LCJleHAiOjE3NjMzODUxMTd9.YlvMa5RaS_T8We3wRjgPWanLl1ilFtzIYkNwazWIquU"}'
+
+
+curl -X 'POST' \
+  'http://localhost:3000/api/invite/validate-by-code' \
+  -H 'Content-Type: application/json' \
+  -d '{"email": "leecode2512@gmail.com", "code": "M9P1SK"}'
+

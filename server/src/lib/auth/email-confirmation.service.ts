@@ -74,7 +74,7 @@ export class EmailConfirmationService {
         }
 
         try {
-            const payload = verify(token, environment.JWT_REFRESH_TOKEN_SECRET!);
+            const payload = verify(token, environment.JWT_VERIFICATION_TOKEN_SECRET!);
 
             if (typeof payload === 'object' && 'email' in payload && 'id' in payload) {
                 const { id, email } = payload;

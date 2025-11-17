@@ -20,7 +20,7 @@ export class FeatureService extends CrudService<Feature> {
     public async isFeatureEnabled(flag: EFeatures): Promise<boolean> {
         try {
             const featureFlag = await super.findOneByWhereOptions({ code: flag });
-            return !!featureFlag?.isEnabled;
+            return featureFlag?.isEnabled!;
         } catch (error) {
             // Feature flag not found, fallback to default value
             return !!toggleFeatures[flag];

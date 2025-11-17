@@ -6,6 +6,7 @@ export * from './employee.model';
 export * from './entity-subscription.model';
 export * from './feature.model';
 export * from './http-status.enum';
+export * from './invite.model';
 export * from './language.model';
 export * from './organization-project.model';
 export * from './organization-team-employee.model';

@@ -26,7 +26,7 @@ export class FeatureFlagGuard implements CanActivate {
 
         let isEnabled: boolean = false;
 
-        if (fromCache === null) {
+        if (fromCache == null) {
             isEnabled = await this.featureFlagService.isFeatureEnabled(flag);
             await this.cacheManager.set(cacheKey, isEnabled);
         } else {

@@ -18,6 +18,7 @@ import { OrganizationModule } from '../organization/organization.module';
 import { OrganizationTeamModule } from '../organization-team/organization-team.module';
 import { EntitySubscriptionModule } from '../entity-subscription/entity-subscription.module';
 import { SharedModule } from '../shared/shared.module';
+import { InviteModule } from '../invite/invite.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { SharedModule } from '../shared/shared.module';
         OrganizationModule,
         OrganizationTeamModule,
         EntitySubscriptionModule,
+        InviteModule,
     ],
     controllers: [AppController],
     providers: [
