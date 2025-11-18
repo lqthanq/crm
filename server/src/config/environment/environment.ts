@@ -35,6 +35,8 @@ export const environment: IEnvironment = {
         appName: process.env.APP_NAME || 'CRM',
         appEmailConfirmationUrl:
             process.env.APP_EMAIL_CONFIRMATION_URL || `${process.env.CLIENT_BASE_URL}/auth/confirm-email`,
+
+        appMagicSignUrl: process.env.APP_MAGIC_SIGN_URL || `${process.env.CLIENT_BASE_URL}/auth/magic-sign-in`,
     },
 };
 

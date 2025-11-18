@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { IAppIntegrationConfig } from 'src/common';
-import { EmailTemplateEnum, IUser, ELanguages } from 'src/contracts';
+import { EEmailTemplate, IUser, ELanguages } from 'src/contracts';
 import { environment as env } from 'src/config';
 import { EmailSendService } from './email-send.service';
 import { deepMerge } from 'src/utils';
-import { EmailTemplate } from '../email-template/email-template.entity';
 import { IsNull } from 'typeorm';
 
 @Injectable()
@@ -24,7 +23,7 @@ export class EmailService {
         const name = [firstName, lastName].filter(Boolean).join(' ') || email;
 
         const sendOptions = {
-            template: EmailTemplateEnum.EMAIL_VERIFICATION,
+            template: EEmailTemplate.EMAIL_VERIFICATION,
             message: {
                 to: `${email}`,
             },
@@ -71,7 +70,7 @@ export class EmailService {
         const appIntegration = deepMerge(env.appIntegrationConfig, integration);
 
         const sendOptions = {
-            template: EmailTemplateEnum.WELCOME_USER,
+            template: EEmailTemplate.WELCOME_USER,
             message: {
                 to: `${user.email}`,
             },
@@ -102,6 +101,60 @@ export class EmailService {
             body['message'] = send.originalMessage;
         } catch (error) {
             console.log('Error while sending welcome user', error);
+        }
+    }
+
+    /**
+     * Sends a magic login code the user's email for password-less authentication.
+     *
+     */
+    async sendMagicLoginCode({
+        email,
+        magicCode,
+        magicLink,
+        locale,
+        integration,
+    }: {
+        email: IUser['email'];
+        magicCode: IUser['code'];
+        magicLink: IAppIntegrationConfig['appMagicSignUrl'];
+        locale: ELanguages;
+        integration: IAppIntegrationConfig;
+    }): Promise<void> {
+        const sendOptions = {
+            template: EEmailTemplate.PASSWORD_LESS_AUTHENTICATION,
+            message: {
+                to: `${email}`,
+            },
+            locals: {
+                locale,
+                email,
+                magicCode,
+                magicLink,
+                ...integration,
+            },
+        };
+
+        const body = {
+            templateName: sendOptions.template,
+            email: sendOptions.message.to,
+            languageCode: locale,
+            message: '',
+        };
+
+        try {
+            // Get the email send service instance
+            const instance = await this.emailSendService.getInstance();
+
+            if (instance) {
+                // Send the email
+                const send = await instance.send(sendOptions);
+
+                // Update the body with the original message
+                body['message'] = send.originalMessage;
+            }
+        } catch (error) {
+            console.log('Error while sending password-less authentication code: %s', error);
         }
     }
 }

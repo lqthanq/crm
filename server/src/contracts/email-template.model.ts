@@ -8,7 +8,9 @@ export interface IEmailTemplate extends IBasePerTenantAndOrganizationEntityModel
     title?: string;
 }
 
-export enum EmailTemplateEnum {
+export enum EEmailTemplate {
+    PASSWORD_LESS_AUTHENTICATION = 'password-less-authentication',
+
     EMAIL_VERIFICATION = 'email-verification',
     WELCOME_USER = 'welcome-user',
 }
