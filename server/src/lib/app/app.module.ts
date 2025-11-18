@@ -19,6 +19,7 @@ import { OrganizationTeamModule } from '../organization-team/organization-team.m
 import { EntitySubscriptionModule } from '../entity-subscription/entity-subscription.module';
 import { SharedModule } from '../shared/shared.module';
 import { InviteModule } from '../invite/invite.module';
+import { OrganizationProjectModule } from '../organization-project/organization-project.module';
 
 @Module({
     imports: [
@@ -29,15 +30,16 @@ import { InviteModule } from '../invite/invite.module';
         CacheModule.register({ isGlobal: true }),
         AuthModule,
         CoreModule,
-        SharedModule,
-        UserModule,
-        SeederModule,
-        TenantModule,
         EmployeeModule,
-        OrganizationModule,
-        OrganizationTeamModule,
         EntitySubscriptionModule,
         InviteModule,
+        OrganizationModule,
+        OrganizationProjectModule,
+        OrganizationTeamModule,
+        SeederModule,
+        SharedModule,
+        TenantModule,
+        UserModule,
     ],
     controllers: [AppController],
     providers: [

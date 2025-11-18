@@ -19,4 +19,9 @@ export enum ERoles {
     INTERVIEWER = 'INTERVIEWER',
 }
 
-export const DEFAULT_SYSTEM_ROLES = [ERoles.SUPER_ADMIN, ERoles.SUPER_ADMIN];
+export interface IRelationalRole {
+    readonly role?: IRole;
+    readonly roleId?: IRole['id'];
+}
+
+export const DEFAULT_SYSTEM_ROLES = [ERoles.SUPER_ADMIN, ERoles.ADMIN, ERoles.EMPLOYEE];

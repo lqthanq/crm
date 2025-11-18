@@ -1,9 +1,10 @@
-import { Column, Entity, Index, JoinColumn, OneToOne, RelationId } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, RelationId } from 'typeorm';
 import { TenantOrganizationBaseEntity } from '../core/entities/tenant-organization-base.entity';
-import { IEmployee, IUser } from 'src/contracts';
+import { IEmployee, IOrganizationProject, IUser } from 'src/contracts';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator';
 import { User } from '../user/user.entity';
+import { OrganizationProjectEmployee } from '../organization-project/organization-project-employee.entity';
 
 @Entity()
 export class Employee extends TenantOrganizationBaseEntity implements IEmployee {
@@ -50,4 +51,17 @@ export class Employee extends TenantOrganizationBaseEntity implements IEmployee 
     @Index()
     @Column()
     userId: string;
+
+    @OneToMany(() => OrganizationProjectEmployee, (it) => it.employee, {
+        cascade: true,
+    })
+    projects?: IOrganizationProject[];
+
+    constructor(input?: any) {
+        super();
+
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
 }

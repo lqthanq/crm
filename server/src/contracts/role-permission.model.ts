@@ -33,6 +33,9 @@ export enum EPermissions {
     ALL_ORG_VIEW = 'ALL_ORG_VIEW',
     ALL_ORG_EDIT = 'ALL_ORG_EDIT',
 
+    ORG_PROJECT_EDIT = 'ORG_PROJECT_EDIT',
+    ORG_PROJECT_ADD = 'ORG_PROJECT_ADD',
+
     // Viewing & Discovery
     PLUGIN_VIEW = 'PLUGIN_VIEW',
 }

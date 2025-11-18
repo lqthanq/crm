@@ -3,6 +3,7 @@ import {
     IBasePerTenantAndOrganizationEntityMutationInput,
     ID,
 } from './base-entity.model';
+import { IOrganizationProject } from './organization-project.model';
 import { IUser } from './user.model';
 
 export interface IEmployee extends IBasePerTenantAndOrganizationEntityModel {
@@ -11,6 +12,8 @@ export interface IEmployee extends IBasePerTenantAndOrganizationEntityModel {
     startedWorkOn?: Date;
     user: IUser;
     userId: ID;
+
+    projects?: IOrganizationProject[];
 
     fullName?: string;
     profile_link?: string;

@@ -65,6 +65,7 @@ export enum EBaseEntity {
     Currency = 'Currency',
     Employee = 'Employee',
     Organization = 'Organization',
+    OrganizationProject = 'OrganizationProject',
     OrganizationTeam = 'OrganizationTeam',
     User = 'User',
     Tanent = 'Tanent',
