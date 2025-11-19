@@ -4,7 +4,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { TenantAwareCrudService } from '../core/crud';
 import { OrganizationTeam } from './organization-team.entity';
-import { OrganziationTeamRepository } from './organization-team.repository';
+import { OrganizationTeamRepository } from './organization-team.repository';
 import { EmployeeRepository } from '../employee/employee.repository';
 import {
     EBaseEntity,
@@ -23,7 +23,7 @@ import { CreateEntitySubscriptionEvent } from '../entity-subscription/events/ent
 @Injectable()
 export class OrganizationTeamService extends TenantAwareCrudService<OrganizationTeam> {
     constructor(
-        readonly organizationTeamRepository: OrganziationTeamRepository,
+        readonly organizationTeamRepository: OrganizationTeamRepository,
         private readonly employeeRepository: EmployeeRepository,
         private readonly roleService: RoleService,
         private readonly _eventBus: EventBus,
@@ -32,7 +32,7 @@ export class OrganizationTeamService extends TenantAwareCrudService<Organization
     }
 
     async create(input: IOrganizationTeamCreateInput): Promise<IOrganizationTeam> {
-        const { memberIds = [], managerIds = [] } = input;
+        const { memberIds = [], managerIds = [], projects = [] } = input;
         const { name, organizationId } = input;
 
         try {
@@ -77,6 +77,7 @@ export class OrganizationTeamService extends TenantAwareCrudService<Organization
                 tenant: { id: tenantId! },
                 name,
                 members,
+                projects,
             });
 
             // Subscribe creator and assignee to the team

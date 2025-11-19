@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -7,11 +7,17 @@ import { ELanguages, IAuthResponse, IUser } from 'src/contracts';
 import { RegisterUserDTO, UserLoginDTO } from '../user/dto';
 import { AuthLoginCommand, AuthRegisterCommand } from './commands';
 import { UseValidationPipe } from '../shared';
+import { AuthRefreshGuard } from '../shared/guards';
+import { RefreshTokenDTO } from './dto';
+import { AuthService } from './auth.service';
 
 @ApiTags('Auth')
 @Controller('/auth')
 export class AuthController {
-    constructor(private readonly commandBus: CommandBus) {}
+    constructor(
+        private readonly commandBus: CommandBus,
+        private readonly authService: AuthService,
+    ) {}
 
     /**
      * Register a new user
@@ -36,9 +42,9 @@ export class AuthController {
 
     /**
      * User login
-     * 
-     * @param input 
-     * @returns 
+     *
+     * @param input
+     * @returns
      */
     @HttpCode(HttpStatus.OK)
     @Post('/login')
@@ -46,5 +52,20 @@ export class AuthController {
     @UseValidationPipe({ transform: true })
     async login(@Body() input: UserLoginDTO): Promise<IAuthResponse | null> {
         return await this.commandBus.execute(new AuthLoginCommand(input));
+    }
+
+    /**
+     * Refresh the access token using a refresh token.
+     *
+     */
+    @ApiOperation({ summary: 'Refresh token' })
+    @HttpCode(HttpStatus.OK)
+    @Public()
+    @UseGuards(AuthRefreshGuard)
+    @Post('/refresh-token')
+    @UseValidationPipe()
+    async refreshToken(@Body() input: RefreshTokenDTO): Promise<{ token: string } | null> {
+        console.log('input >', input);
+        return await this.authService.getAccessTokenFromRefreshToken();
     }
 }

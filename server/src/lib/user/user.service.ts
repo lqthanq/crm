@@ -1,12 +1,14 @@
-import { UpdateResult } from 'typeorm';
+import { Brackets, SelectQueryBuilder, UpdateResult, WhereExpressionBuilder } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { TenantAwareCrudService } from '../core/crud';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { ID } from 'src/contracts';
 import { freshTimestamp } from '../core';
+import { JwtPayload } from 'jsonwebtoken';
+import { isNotEmpty } from 'class-validator';
 
 @Injectable()
 export class UserService extends TenantAwareCrudService<User> {
@@ -63,9 +65,9 @@ export class UserService extends TenantAwareCrudService<User> {
 
     /**
      * Marked email as verified for user
-     * 
-     * @param id 
-     * @returns 
+     *
+     * @param id
+     * @returns
      */
     public async markEmailAsVerified(id: ID) {
         return await this.repository.update(
@@ -77,5 +79,62 @@ export class UserService extends TenantAwareCrudService<User> {
                 codeExpireAt: null,
             },
         );
+    }
+
+    /**
+     * Get user if refresh token matches
+     *
+     * @param refreshToken
+     * @param payload
+     * @returns
+     */
+    async getUserIfRefreshTokenMatches(refreshToken: string, payload: JwtPayload) {
+        try {
+            const { id, email, tenantId, role } = payload;
+
+            const query = this.repository.createQueryBuilder('user');
+
+            query.setFindOptions({
+                join: {
+                    // TODO: relations?
+                    alias: 'user',
+                    leftJoin: { role: 'user.role ' },
+                },
+            });
+
+            query.where((query: SelectQueryBuilder<User>) => {
+                query.andWhere(
+                    new Brackets((web: WhereExpressionBuilder) => {
+                        web.andWhere(`"${query.alias}"."id" = :id`, { id });
+                        web.andWhere(`"${query.alias}"."email" = :email`, { email });
+                    }),
+                );
+
+                query.andWhere(
+                    new Brackets((web: WhereExpressionBuilder) => {
+                        if (isNotEmpty(tenantId)) {
+                            web.andWhere(`"${query.alias}"."tenantId" = :tenantId`, { tenantId });
+                        }
+
+                        if (isNotEmpty(role)) {
+                            web.andWhere(`"role"."name" = :role`, { role });
+                        }
+                    }),
+                );
+
+                query.orderBy(`"${query.alias}"."createdAt"`, 'DESC');
+            });
+
+            const user = await query.getOneOrFail();
+            const isRefreshTokenMatching = await bcrypt.compare(refreshToken, user.refreshToken!);
+
+            if (isRefreshTokenMatching) {
+                return user;
+            }
+
+            throw new UnauthorizedException();
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
     }
 }

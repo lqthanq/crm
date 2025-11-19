@@ -253,4 +253,25 @@ export class AuthService extends SocialAuthService {
     async getAuthenticatedUser(id: string): Promise<User | null> {
         return this.userService.getIfExists(id);
     }
+
+    /**
+     * Get JWT access token from JWT refresh token
+     * @returns 
+     */
+    async getAccessTokenFromRefreshToken(): Promise<{ token: string } | null> {
+        try {
+            // Get the current user from the request context
+            const user = RequestContext.currentUser();
+
+            // If no user is found, return null
+            if (!user) return null;
+
+            // Get and return the JWT access token for the user
+            const token = await this.getJwtAccessToken(user);
+            return { token };
+        } catch (error) {
+            console.error('Error while retrieving JWT access token from refresh token:', error);
+            return null;
+        }
+    }
 }

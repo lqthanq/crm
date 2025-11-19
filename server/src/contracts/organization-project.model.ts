@@ -1,6 +1,7 @@
 import { IBasePerTenantAndOrganizationEntityModel, ID } from './base-entity.model';
 import { IManagerAssignable } from './common.model';
 import { IEmployeeEntityInput, IMemberEntityBased } from './employee.model';
+import { IOrganizationTeam } from './organization-team.model';
 import { IRelationalRole } from './role.model';
 
 export interface IOrganizationProjectBase extends IBasePerTenantAndOrganizationEntityModel {
@@ -8,6 +9,8 @@ export interface IOrganizationProjectBase extends IBasePerTenantAndOrganizationE
 
     members?: IOrganizationProjectEmployee[];
     public?: boolean;
+    
+    teams?: IOrganizationTeam[];
 
     membersCount?: number;
 }
